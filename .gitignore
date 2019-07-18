@@ -1,0 +1,5 @@
+/node_modules
+/.next
+packages/
+config/test_config.yml
+/.idea
