@@ -4,6 +4,8 @@ import { Layout, PageHeader, Tabs, Card, List, Typography } from 'antd';
 import { observer } from "mobx-react";
 import { observable, runInAction } from "mobx";
 
+import './app.css';
+
 import analyzer from "./analyzer";
 import offers from "./mock.json";
 

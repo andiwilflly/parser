@@ -10,7 +10,7 @@ chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
 
 const offers = {};
-const parsePages = 8;
+const parsePages = 15;
 const parseOffersPerPage = null; // Int, null
 
 
@@ -28,15 +28,17 @@ async function getOffers() {
 			oldOffers = {};
 		}
 
-		const newOffers = Object.keys(offers)
+		const newOffers = Object.keys(oldOffers)
 								.filter(offerLink => !oldOffers[offerLink])
 								.reduce((res, offerId) => {
 									res[offerId] = offers[offerId];
 									return res;
 								}, {});
 
+		// console.log(Object.keys(oldOffers).length, Object.keys(newOffers).length, 'current');
+
 		fs.writeFileSync(__dirname + `/newOffers.json`, JSON.stringify(newOffers, null, 4));
-		//fs.writeFileSync(__dirname + `/offers.json`, JSON.stringify(offers, null, 4));
+		fs.writeFileSync(__dirname + `/offers.json`, JSON.stringify(offers, null, 4));
 		console.log(`===> PARSE END`);
 	});
 
@@ -56,7 +58,7 @@ async function getOffersPage(driver, page = 1) {
 		if($(this).find('img')[0]) offers[link].image = $($(this).find('img')[0]).attr('src');
 	});
 
-	// await getOfferDetails(driver, Object.keys(offers)[0]);
+	await getOfferDetails(driver, Object.keys(offers)[0]);
 	for (let i = 0; i < (parseOffersPerPage || Object.keys(offers).length); i++) {
 		await getOfferDetails(driver, Object.keys(offers)[i]);
 	}
