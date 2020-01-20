@@ -1,6 +1,8 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer-extra');
 
+const oldOffers = require('./reports/offers.json');
+
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
@@ -22,28 +24,30 @@ async function parsePage(number = 1) {
     const links = await page.evaluate(()=> [...document.querySelectorAll('#offers_table a.detailsLink') ].map($el => $el.getAttribute('href')));
 
     for(let i = 0; i < links.length; i++) {
-        let page = await browser.newPage();
-
         console.log('ENTER sub page', number, i);
         if(!links[i]) continue;
         await page.goto(links[i], { waitUntil: 'networkidle2' });
 
         try {
+            const offer = await page.evaluate(()=> {
+                return {
+                    title: document.querySelectorAll('h1')[0].innerText,
+                    address: document.querySelectorAll('.show-map-link')[0].innerText,
+                    price: document.querySelectorAll('.price-label')[0].innerText.replace('$', '').replace(/ /g, ''),
+                    description: document.querySelectorAll('#textContent')[0].innerText,
+                    images: [ ...document.querySelectorAll('.photo-glow > img')].map($img => $img.getAttribute('src')),
+                    details: [ ...new Set(document.querySelectorAll('.details')[0].innerText.replace(/\t/g, ' ').split("\n").filter(Boolean)) ]
+                };
+            });
             offers[links[i]] = {
+                ...offer,
                 page: number,
+                isNew: !oldOffers[links[i]],
                 link: links[i],
-                title: await page.evaluate(()=> document.querySelectorAll('h1')[0].innerText ),
-                address: await page.evaluate(()=> document.querySelectorAll('.show-map-link')[0].innerText),
-                price: await page.evaluate(()=> document.querySelectorAll('.price-label')[0].innerText.replace('$', '').replace(/ /g, '')),
-                description: await page.evaluate(()=> document.querySelectorAll('#textContent')[0].innerText),
-                images: await page.evaluate(()=> [ ...document.querySelectorAll('.photo-glow > img')].map($img => $img.getAttribute('src'))),
-                details: await page.evaluate(()=> [ ...new Set(document.querySelectorAll('.details')[0].innerText.replace(/\t/g, ' ').split("\n").filter(Boolean)) ])
             };
-        } catch {
-            console.log('PARSE page', number, i, 'ERROR');
+        } catch(e) {
+            console.log('PARSE page', number, i, 'ERROR, ', e);
         }
-
-        page.close();
     }
 }
 
@@ -53,7 +57,7 @@ async function start() {
         await parsePage(i);
     }
     console.log('END');
-    fs.writeFileSync(__dirname + `/reports/offers.json`, JSON.stringify(offers, null, 4));
+    fs.writeFileSync(__dirname + `/src/parser/reports/offers1.json`, JSON.stringify(offers, null, 4));
 
     browser.close();
 }
