@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 
 
 const offers = {};
-const parsePages = 3;
+const parsePages = 4;
 const url = 'https://www.olx.ua/nedvizhimost/doma/prodazha-domov/kiev/?search%5Bfilter_float_price%3Ato%5D=75000&search%5Bfilter_float_price%3Afrom%5D=20000&search%5Bfilter_float_total_floors%3Ato%5D=3&search%5Bfilter_float_total_area%3Afrom%5D=90&search%5Bfilter_float_land_area%3Afrom%5D=15&search%5Bphotos%5D=1&search%5Bdist%5D=15&currency=USD';
 let browser = null;
 
@@ -32,6 +32,7 @@ async function parsePage(number = 1) {
             const offer = await page.evaluate(()=> {
                 return {
                     title: document.querySelectorAll('h1')[0].innerText,
+                    date: document.querySelector('.offer-titlebox__details > em').innerText,
                     address: document.querySelectorAll('.show-map-link')[0].innerText,
                     price: document.querySelectorAll('.price-label')[0].innerText.replace('$', '').replace(/ /g, ''),
                     description: document.querySelectorAll('#textContent')[0].innerText,
@@ -46,7 +47,7 @@ async function parsePage(number = 1) {
                 link: links[i],
             };
         } catch(e) {
-            console.log('PARSE page', number, i, 'ERROR, ', e);
+            console.log('PARSE page', number, i, 'ERROR, ');
         }
     }
 }
@@ -57,10 +58,13 @@ async function start() {
         await parsePage(i);
     }
     console.log('END');
-    fs.writeFileSync(__dirname + `/src/parser/reports/offers1.json`, JSON.stringify(offers, null, 4));
+    fs.writeFileSync(`./reports/offers.json`, JSON.stringify(offers, null, 4));
 
     browser.close();
+
+    process.exit()
 }
 
 
 start();
+
