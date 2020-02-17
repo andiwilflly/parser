@@ -13,6 +13,12 @@ const url = 'https://www.olx.ua/nedvizhimost/doma/prodazha-domov/kiev/?search%5B
 let browser = null;
 
 
+function delay(time) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, time)
+    });
+}
+
 async function parsePage(number = 1) {
     browser = await puppeteer.launch({ headless: true });
 
@@ -20,6 +26,8 @@ async function parsePage(number = 1) {
     const page = await browser.newPage();
 
     await page.goto(`${url}&page=${number}`, { waitUntil: 'networkidle2' });
+
+    //await delay(4000); // Async load links
 
     const links = await page.evaluate(()=> [...document.querySelectorAll('#offers_table a.detailsLink') ].map($el => $el.getAttribute('href')));
 
