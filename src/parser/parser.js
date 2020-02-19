@@ -61,18 +61,17 @@ async function parsePage(number = 1) {
 }
 
 
-async function start() {
-    for(let i = 1; i <= parsePages; i++) {
+async function start(pages) {
+    console.log('PARSER:START | total pages:', pages);
+
+    for(let i = 1; i <= pages; i++) {
         await parsePage(i);
     }
-    console.log('END');
+    console.log('PARSER:END');
     fs.writeFileSync(`./reports/offers.json`, JSON.stringify(offers, null, 4));
 
     browser.close();
-
-    process.exit()
 }
 
-
-start();
+module.exports = start;
 

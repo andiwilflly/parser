@@ -6,13 +6,12 @@ import 'react-image-lightbox/style.css';
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
+// Models
+import DBModel from "../models/DB.model";
+// Components
 import AllMap from "./AllMap.component";
 import OffersList from "./OffersList.component";
 
-import DBGoodLocation from "../parser/reports/goodLocation.json";
-import DBGoodLocationAndWords from "../parser/reports/goodLocationAndWords.json";
-import DBGoodLocationLeft from "../parser/reports/goodLocationLeft";
-import DBGoodLocationAndWordsLeft from "../parser/reports/goodLocationAndWordsLeft.json";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kaXdpbGxmbHkiLCJhIjoiY2s2cW1qajhoMHB3MDNzcW81dmM4bDlkMSJ9.gmA_WZGL_NxHa4hdx9sttA';
@@ -26,14 +25,21 @@ class LayoutComponent extends React.Component {
     selectedKey = observable.box('1');
 
 
+    async componentDidMount() {
+        await DBModel.fetchData('goodLocations');
+        await DBModel.fetchData('goodLocationsAndWords');
+        await DBModel.fetchData('goodLocationsLeft');
+        await DBModel.fetchData('goodLocationsAndWordsLeft');
+    }
+
     get newOffers() {
-        return (this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords).filter(offer => offer.isNew)
+        return (this.mode.get() === 'left' ? DBModel.data.goodLocationsAndWordsLeft : DBModel.data.goodLocationsAndWords).filter(offer => offer.isNew)
     }
 
     get offers() {
         switch(this.selectedKey.get()) {
-            case '1': return this.mode.get() === 'left' ? DBGoodLocationLeft : DBGoodLocation;
-            case '2': return this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords;
+            case '1': return this.mode.get() === 'left' ? DBModel.data.goodLocationsLeft : DBModel.data.goodLocations;
+            case '2': return this.mode.get() === 'left' ? DBModel.data.goodLocationsAndWordsLeft : DBModel.data.goodLocationsAndWords;
             case '3': return this.newOffers;
         }
     }
@@ -57,12 +63,12 @@ class LayoutComponent extends React.Component {
                               onSelect={ (menu)=> this.selectedKey.set( menu.selectedKeys[0]) }>
                             <Menu.Item key="1">
 								<span className="nav-text">
-									За місцезнаходженням <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBGoodLocationLeft : DBGoodLocation).length })</b>
+									За місцезнаходженням <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBModel.data.goodLocationsLeft : DBModel.data.goodLocations).length })</b>
 								</span>
                             </Menu.Item>
                             <Menu.Item key="2">
 								<span className="nav-text">
-									За ключовими словами <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords).length })</b>
+									За ключовими словами <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBModel.data.goodLocationsAndWordsLeft : DBModel.data.goodLocationsAndWords).length })</b>
 								</span>
                             </Menu.Item>
                             <Menu.Item key="3">
@@ -73,10 +79,13 @@ class LayoutComponent extends React.Component {
                         </Menu>
                     </Layout.Sider>
                     <Layout.Content>
-                        { this.mode.get() === 'list' ?
-                            <OffersList offers={ this.offers } />
+                        { this.offers.length ?
+                            this.mode.get() === 'list' ?
+                                <OffersList offers={ this.offers } />
+                                :
+                                <AllMap offers={ this.offers } mapBoxClient={ mapBoxClient } />
                             :
-                            <AllMap offers={ this.offers } mapBoxClient={ mapBoxClient } />
+                            'loading...'
                         }
                     </Layout.Content>
                 </Layout>

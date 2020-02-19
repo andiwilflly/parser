@@ -6,7 +6,9 @@ const goodWords =  require("./goodWords");
 const badWords =  require("./badWords");
 const offersObject = require('./reports/offers.json');
 
-function f() {
+function filter() {
+    console.log('FILTER:START');
+
     const offers = Object.values(offersObject);
 
     const fuse = new Fuse(offers, {
@@ -97,13 +99,10 @@ function f() {
     fs.writeFileSync(__dirname + `/reports/goodLocationLeft.json`, JSON.stringify(goodOffersLeft.map(link => offersObject[link]), null, 4));
     fs.writeFileSync(__dirname + `/reports/goodLocationAndWordsLeft.json`, JSON.stringify(goodOffersWordsLeft.map(link => offersObject[link]), null, 4));
 
-    return {
-        byLocation: goodOffers.map(link => offersObject[link]),
-        byLocationAndWords: goodOffersWords.map(link => offersObject[link])
-    }
+    console.log('FILTER:END');
 }
 
-f();
+module.exports = filter;
 
 
 

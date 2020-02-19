@@ -2,20 +2,25 @@
   "name": "olx",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@google/maps": "^1.1.0",
     "antd": "^3.19.6",
     "brain.js": "^2.0.0-alpha.12",
     "cheerio": "^1.0.0-rc.3",
     "chromedriver": "^79.0.0",
+    "express": "^4.17.1",
+    "express-progressbar": "^2.0.0",
     "fs": "^0.0.1-security",
     "fuse.js": "^3.4.5",
     "html-to-json": "^0.6.0",
     "http": "^0.0.0",
     "http-proxy": "^1.17.0",
+    "http-proxy-middleware": "^1.0.0",
     "mapbox-gl": "^1.7.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.1",
+    "proxysocket": "^1.2.0",
     "puppeteer": "^2.0.0",
     "puppeteer-extra": "^3.1.9",
     "puppeteer-extra-plugin-stealth": "^2.4.9",
@@ -29,7 +34,11 @@
     "react-visibility-observer": "^1.0.4",
     "react-yandex-maps": "^4.2.0",
     "request": "^2.88.0",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "socket.io-proxy": "^1.0.3",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.1.0"
