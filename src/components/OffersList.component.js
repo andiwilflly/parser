@@ -1,87 +1,81 @@
 import React from 'react';
-import mapboxgl from 'mapbox-gl';
-import { Layout, Radio, Menu } from 'antd';
+import { Avatar, Tag, Card, List } from 'antd';
 import 'react-image-lightbox/style.css';
-
+import Gallery from 'react-grid-gallery';
+import Highlighter from "react-highlight-words";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import DBGoodWords from "../parser/goodWords";
+import DBBadWords from "../parser/badWords";
 
-import AllMap from "./AllMap.component";
+const Highlight = ({ children })=> {
+    return <span style={{ background: DBBadWords.includes(children) ? 'rgba(247, 0, 0, 0.45)' : '#90ee9069' }}>
+        { children }
+    </span>
+};
 
-import DBGoodLocation from "../parser/reports/goodLocation.json";
-import DBGoodLocationAndWords from "../parser/reports/goodLocationAndWords.json";
-import DBGoodLocationLeft from "../parser/reports/goodLocationLeft";
-import DBGoodLocationAndWordsLeft from "../parser/reports/goodLocationAndWordsLeft.json";
-
-
-mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kaXdpbGxmbHkiLCJhIjoiY2s2cW1qajhoMHB3MDNzcW81dmM4bDlkMSJ9.gmA_WZGL_NxHa4hdx9sttA';
-const mapBoxClient = window.mapboxSdk({ accessToken: mapboxgl.accessToken });
-
-
-class LayoutComponent extends React.Component {
-
-    tab = observable.box('3');
-    mode = observable.box('right');
-    selectedKey = observable.box('1');
+class OffersList extends React.Component {
 
 
-    get newOffers() {
-        return (this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords).filter(offer => offer.isNew)
+    listData = [];
+
+
+    constructor(props) {
+        super(props);
+
+        this.listData = [...props.offers];
     }
 
-    get mapOffers() {
-        switch(this.selectedKey.get()) {
-            case '1': return this.mode.get() === 'left' ? DBGoodLocationLeft : DBGoodLocation;
-            case '2': return this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords;
-            case '3': return this.newOffers;
-        }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.offers.length === prevProps.offers.length) return;
+        this.listData = [...this.props.offers];
+        this.forceUpdate();
     }
 
 
     render() {
         return (
-            <Layout>
-                <Layout.Header>
-                    <Radio.Group value={this.mode.get()}
-                                 onChange={ (e)=> this.mode.set(e.target.value) }>
-                        <Radio.Button value={'right'}>Правый берег</Radio.Button>
-                        <Radio.Button value={'left'}>Левый берег</Radio.Button>
-                        <Radio.Button value={'list'}>Список</Radio.Button>
-                    </Radio.Group>
-                </Layout.Header>
-                <Layout>
-                    <Layout.Sider width={400} theme='light'>
-                        <Menu theme="light" mode="inline"
-                              selectedKeys={[this.selectedKey.get()]}
-                              onSelect={ (menu)=> this.selectedKey.set( menu.selectedKeys[0]) }>
-                            <Menu.Item key="1">
-								<span className="nav-text">
-									По расположению <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBGoodLocationLeft : DBGoodLocation).length })</b>
-								</span>
-                            </Menu.Item>
-                            <Menu.Item key="2">
-								<span className="nav-text">
-									По расположению и ключевым словам <b style={{ color: 'orange' }}>({ (this.mode.get() === 'left' ? DBGoodLocationAndWordsLeft : DBGoodLocationAndWords).length })</b>
-								</span>
-                            </Menu.Item>
-                            <Menu.Item key="3">
-								<span className="nav-text">
-									Новые предложения <b style={{ color: 'orange' }}>({ this.newOffers.length })</b>
-								</span>
-                            </Menu.Item>
-                        </Menu>
-                    </Layout.Sider>
-                    <Layout.Content>
-                        { this.mode.get() === 'list' ?
-                            <p>Hello list</p>
-                            :
-                            <AllMap offers={ this.mapOffers } mapBoxClient={ mapBoxClient } />
-                        }
-                    </Layout.Content>
-                </Layout>
-            </Layout>
+            <Card>
+                <List
+                    itemLayout="vertical"
+                    size="small"
+                    pagination={{ pageSize: 10 }}
+                    dataSource={ this.listData }
+                    renderItem={offer => (
+                        <List.Item key={offer.link}>
+                            <List.Item.Meta
+                                avatar={<Avatar size={50} src={offer.images[0]} />}
+                                title={<a target='_blank' href={offer.link}>{offer.title} { offer.isNew ? <span style={{ background: '#3cce3c', color: 'white', padding: 5, borderRadius: 5 }}>new</span> : null }</a>}
+                                description={
+                                    <Highlighter
+                                        highlightTag={ Highlight }
+                                        searchWords={[...DBGoodWords, ...DBBadWords]}
+                                        autoEscape={true}
+                                        textToHighlight={ offer.description }
+                                        /> } />
+
+                            <div className='clearfix' style={{ marginLeft: 65 }}>
+                                { offer.details
+                                    .map(d => d.trim())
+                                    .filter(Boolean)
+                                    .map(detail => <Tag key={detail}>{ detail }</Tag>) }
+                                <br/>
+                                <br/>
+                                <Gallery rowHeight={100}
+                                         images={ offer.images.map(img => ({
+                                            src: img,
+                                            thumbnail: img,
+                                            thumbnailWidth: 'auto',
+                                            thumbnailHeight: 100
+                                        })) }/>
+                            </div>
+                        </List.Item>
+                    )}
+                />
+            </Card>
         );
     }
 }
 
-export default observer(LayoutComponent);
+export default observer(OffersList);
