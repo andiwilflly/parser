@@ -102,6 +102,8 @@ function filter() {
     console.log('FILTER:END');
 }
 
+filter();
+
 module.exports = filter;
 
 

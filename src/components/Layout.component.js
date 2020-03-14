@@ -13,7 +13,6 @@ import AllMap from "./AllMap.component";
 import OffersList from "./OffersList.component";
 
 
-
 mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kaXdpbGxmbHkiLCJhIjoiY2s2cW1qajhoMHB3MDNzcW81dmM4bDlkMSJ9.gmA_WZGL_NxHa4hdx9sttA';
 const mapBoxClient = window.mapboxSdk({ accessToken: mapboxgl.accessToken });
 

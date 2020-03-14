@@ -33,12 +33,20 @@ app.get('/api/parse', async function(req, res) {
 
     try {
         await parser(pages);
+        filter();
     } catch(e) {
         return res.status(500).send(e);
     }
 
+    return res.send({ success: true });
+});
+
+app.get('/api/parse_dom_ria', async function(req, res) {
+    const pages = req.query.pages;
+    const parser = require('./src/parser/parser_dom.ria');
+
     try {
-        await filter();
+        await parser(pages);
     } catch(e) {
         return res.status(500).send(e);
     }
