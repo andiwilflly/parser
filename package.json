@@ -51,7 +51,7 @@
     "server": "yarn build && cd ./server && node server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "parse": "cd ./src/parser && node parser.js && node filter.js && cd ../../"
+    "parse": "cd ./src/parser && node parser.js && node filter.js && node parseTitle.js && cd ../../"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -26,10 +26,10 @@ class LayoutComponent extends React.Component {
 
 
     async componentDidMount() {
-        await DBModel.fetchData('goodLocations');
-        await DBModel.fetchData('goodLocationsAndWords');
-        await DBModel.fetchData('goodLocationsLeft');
-        await DBModel.fetchData('goodLocationsAndWordsLeft');
+        // await DBModel.fetchData('goodLocations');
+        // await DBModel.fetchData('goodLocationsAndWords');
+        // await DBModel.fetchData('goodLocationsLeft');
+        // await DBModel.fetchData('goodLocationsAndWordsLeft');
     }
 
     get newOffers() {
@@ -49,7 +49,7 @@ class LayoutComponent extends React.Component {
 
         return (
             <div>
-                <FlatsMap />
+                <FlatsMap mapBoxClient={ mapBoxClient } />
             </div>
         );
 
