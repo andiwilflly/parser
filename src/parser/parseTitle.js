@@ -1,15 +1,16 @@
 const fs = require('fs');
-const Fuse = require("fuse.js");
 const offers = Object.values(require('./reports/offers.json'));
 const kievStreets = require('./kievStreets.json');
 
 async function init() {
 
-    const parsedOffers = offers.map(offer => {
+    let parsedOffers = offers.map(offer => {
         let streetMatch = kievStreets.filter(street => offer.title.includes(`${street}`) ? street : null);
         streetMatch = streetMatch.sort(function (a, b) { return b.length - a.length; })[0];
 
-        if(streetMatch) {
+        //if(offer.title.includes('Лаврухина')) console.log(offer.title, ' | ' ,streetMatch );
+
+        if(streetMatch && streetMatch.length >= 4) {
             let sub = 'улица ';
             if(offer.title.includes('ул') || offer.title.includes('вул')) sub = 'улица';
             if(offer.title.includes('пл.')) sub = 'площадь';
@@ -17,9 +18,11 @@ async function init() {
             if(offer.title.includes(' пл')) sub = 'площадь';
             if(offer.title.includes('пер')) sub = 'переулок';
             if(offer.title.includes('просп')) sub = 'проспект';
+            if(offer.title.includes('П. ')) sub = 'проспект';
             if(offer.title.includes(' пр')) sub = 'проспект';
             if(offer.title.includes(' М.')) sub = 'метро';
             if(offer.title.includes('бульв')) sub = 'бульвар';
+            if(offer.title.includes('бульвар')) sub = 'бульвар';
             if(offer.title.includes('спуск')) sub = 'спуск';
             if(offer.title.includes('шоссе')) sub = 'шоссе';
             if(offer.title.includes('дор ')) sub = 'дорога';
@@ -46,10 +49,9 @@ async function init() {
             && offer.title.match(/(жк|ЖК)[ ][\D][^,.]+/)
         ) {
             const match = offer.title.match(/(жк|ЖК)[ ][\D][^,.]+/);
-
             return {
                 ...offer,
-                address: `ЖК ${match}`
+                address: `ЖК ${match[0].replace(/ЖК/g, '').replace(/жк/g, '').replace(/ /g, '')}`
             };
         }
 
@@ -57,6 +59,10 @@ async function init() {
 
         return offer;
     });
+
+    // Deduplicate
+    const uniqTitle = [ ...new Set(parsedOffers.map(offer => offer.title)) ];
+    parsedOffers = uniqTitle.map(title => parsedOffers.find(offer => offer.title === title));
 
     fs.writeFileSync(__dirname + `/reports/parsedOffers.json`, JSON.stringify(parsedOffers, null, 4));
 }

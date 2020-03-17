@@ -17,6 +17,17 @@ import OSM from 'ol/source/OSM';
 // Offers
 import DB_FLATS from "../parser/reports/parsedOffers.json";
 
+function randomInteger(min, max) {
+    // получить случайное число от (min-0.5) до (max+0.5)
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+}
+
+const platform = new window.H.service.Platform({
+    apikey: 'H6XyiCT0w1t9GgTjqhRXxDMrVj9h78ya3NuxlwM7XUs'
+});
+
+
 
 class FlatsMap extends React.Component {
 
@@ -50,7 +61,11 @@ class FlatsMap extends React.Component {
             })
         });
 
+        this.MAP.set('layers', []);
+        this.MAP.render();
+
         this.createPopup();
+        this.forceUpdate();
     }
 
 
@@ -60,9 +75,29 @@ class FlatsMap extends React.Component {
 
     async getLocations() {
         for(const flat of DB_FLATS) {
+
+            // await new Promise(resolve => {
+            //     const geocoder = platform.getGeocodingService();
+            //     geocoder.geocode(
+            //         {
+            //             searchText: `Украина Киев ${flat.address}`,
+            //             jsonattributes : 1
+            //         },
+            //         (result)=> {
+            //             var locations = result.response.view[0].result;
+            //             console.log(locations, "locations!");
+            //             resolve();
+            //         },
+            //         (e)=> {
+            //             console.log('error', e);
+            //             resolve();
+            //         }
+            //     );
+            // });
+
             await this.props.mapBoxClient.geocoding
                 .forwardGeocode({
-                    query: `Киев, ${flat.address}`,
+                    query: `Украина Киев ${flat.address}`,
                     autocomplete: false,
                     limit: 1
                 })
@@ -74,7 +109,9 @@ class FlatsMap extends React.Component {
                         response.body.features &&
                         response.body.features.length
                     ) {
-                        this.createFlat(flat, response.body.features[0].center);
+                        const axes = response.body.features[0].center;
+                        this.createFlat(flat, axes);
+                        // this.createFlat(flat, [axes[0] + (Math.random()/1000), axes[1] + (Math.random()/1000)]);
                     }
                 });
         }
@@ -104,9 +141,39 @@ class FlatsMap extends React.Component {
 
 
     createPopup() {
+        const info = window.$('#info');
+        info.tooltip({
+            animation: false,
+            trigger: 'manual'
+        });
+
+        const displayFeatureInfo = (pixel)=> {
+            info.css({
+                left: pixel[0] + 'px',
+                top: (pixel[1] - 25) + 'px'
+            });
+            const feature = this.MAP.forEachFeatureAtPixel(pixel, (feature)=> feature);
+            if(feature) {
+
+                this.flats[feature.get('link')].visited = true;
+                this.forceUpdate();
+
+
+                info.tooltip('hide')
+                    .attr('data-original-title', `${feature.get('title')} (${feature.get('price')})`)
+                    .tooltip('fixTitle')
+                    .tooltip('show');
+                this.MAP.getViewport().style.cursor = 'pointer';
+            } else {
+                info.tooltip('hide');
+                this.MAP.getViewport().style.cursor = 'inherit';
+            }
+        };
+
         this.MAP.on('click', (event)=> {
             const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
             if (flatDot) {
+                info.tooltip('hide');
                 this.selectedFlatId.set(flatDot.values_.link);
             } else {
                 this.selectedFlatId.set(null);
@@ -114,25 +181,44 @@ class FlatsMap extends React.Component {
         });
 
         this.MAP.on('pointermove', (event)=> {
-            const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
-            if (this.MAP.hasFeatureAtPixel(event.pixel)) {
-                this.MAP.getViewport().style.cursor = 'pointer';
-                //this.selectedFlatId.set(flatDot.values_.link);
-            } else {
-                this.MAP.getViewport().style.cursor = 'inherit';
-                //this.selectedFlatId.set(null);
+            if (event.dragging) {
+                info.tooltip('hide');
+                return;
             }
+            displayFeatureInfo(this.MAP.getEventPixel(event.originalEvent));
         });
     }
 
 
     render() {
-        if(this.selectedFlatId.get()) console.log(this.selectedFlat);
         return (
             <div>
+                <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
+                    {/*{ this.dots.map((dot, i)=> {*/}
+                    {/*    const link = this.flats[dot.values_.link];*/}
+                    {/*    return <div key={i} style={{ background: link.visited ? 'red' : 'lightgray' }}>*/}
+                    {/*        {dot.values_.address} | { link.location[0] } : { link.location[1] }*/}
+                    {/*    </div>*/}
+                    {/*})}*/}
+                    { DB_FLATS.map((flat, i)=> {
+                        const link = this.flats[flat.link];
+                        if(!link) return null;
+                        return <div key={i} style={{ background: link.visited ? 'red' : 'lightgray' }}>
+                            {flat.address} | { link.location[0] } : { link.location[1] }
+                        </div>
+                    })}
+                </div>
+
                 <div id="map" style={{ width: '100wv', height: '100vh' }} >
                     <div id="popup" />
                 </div>
+                <div id="info" style={{
+                    position: 'absolute',
+                    height: 1,
+                    width: 1,
+                    zIndex: 100
+                }}/>
+
                 { this.selectedFlatId.get() ?
                     <div id="info" style={{
                         position: 'fixed',
