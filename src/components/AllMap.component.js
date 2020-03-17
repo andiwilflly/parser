@@ -31,7 +31,7 @@ class AllMap extends React.Component {
         for(const offer of this.props.offers) {
             await this.props.mapBoxClient.geocoding
                 .forwardGeocode({
-                    query: offer.address,
+                    query: `Киев, ${offer.address}`,
                     autocomplete: false,
                     limit: 1
                 })

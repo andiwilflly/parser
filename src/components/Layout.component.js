@@ -10,6 +10,7 @@ import { observer } from "mobx-react";
 import DBModel from "../models/DB.model";
 // Components
 import AllMap from "./AllMap.component";
+import FlatsMap from "./FlatsMap.component";
 import OffersList from "./OffersList.component";
 
 
@@ -45,6 +46,13 @@ class LayoutComponent extends React.Component {
 
 
     render() {
+
+        return (
+            <div>
+                <FlatsMap />
+            </div>
+        );
+
         return (
             <Layout>
                 <Layout.Header>

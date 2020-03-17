@@ -6,8 +6,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 
 app.get('/api/goodLocations', function (req, res) {
-    const data = require('./src/parser/reports/goodLocation.json');
-    return res.send(JSON.stringify(data));
+    const data = require('./src/parser/reports/parsedOffers');
+    return res.send(JSON.stringify(Object.values(data)));
 });
 
 app.get('/api/goodLocationsAndWords', function (req, res) {
