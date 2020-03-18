@@ -17,16 +17,6 @@ import OSM from 'ol/source/OSM';
 // Offers
 import DB_FLATS from "../parser/reports/parsedOffers.json";
 
-// import GEOCODER from './geocoder.util';
-//
-// GEOCODER('Украина Киев улица Маяковского 63а');
-// GEOCODER('Украина Киев улица Маяковского 63');
-
-function randomInteger(min, max) {
-    // получить случайное число от (min-0.5) до (max+0.5)
-    let rand = min - 0.5 + Math.random() * (max - min + 1);
-    return Math.round(rand);
-}
 
 const platform = new window.H.service.Platform({
     apikey: 'yNXTO7pg5KdL_J8_BkDe0_PUDGfbTdwagSXAUs37pTY'
@@ -138,7 +128,7 @@ class FlatsMap extends React.Component {
 
         flatDot.setStyle(new Style({
             image: new CircleStyle({
-                radius: 7,
+                radius: 5,
                 fill: new Fill({ color: 'blue' }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })

@@ -12,12 +12,14 @@ async function init() {
 
         if(streetMatch && streetMatch.length >= 4) {
             let sub = 'улица ';
-            if(offer.title.includes('ул') || offer.title.includes('вул')) sub = 'улица';
+            if(offer.title.includes('Ул.') || offer.title.includes('ул') || offer.title.includes('вул')) sub = 'улица';
             if(offer.title.includes('пл.')) sub = 'площадь';
             if(offer.title.includes('пл ')) sub = 'площадь';
             if(offer.title.includes(' пл')) sub = 'площадь';
             if(offer.title.includes('пер')) sub = 'переулок';
             if(offer.title.includes('просп')) sub = 'проспект';
+            if(offer.title.includes('Пр-кт')) sub = 'проспект';
+            if(offer.title.includes('пр-кт')) sub = 'проспект';
             if(offer.title.includes('П. ')) sub = 'проспект';
             if(offer.title.includes(' пр')) sub = 'проспект';
             if(offer.title.includes(' М.')) sub = 'метро';
