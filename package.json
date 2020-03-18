@@ -24,6 +24,8 @@
     "proxysocket": "^1.2.0",
     "puppeteer": "^2.0.0",
     "puppeteer-extra": "^3.1.9",
+    "puppeteer-extra-plugin-adblocker": "^2.11.3",
+    "puppeteer-extra-plugin-anonymize-ua": "^2.2.8",
     "puppeteer-extra-plugin-stealth": "^2.4.9",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -51,7 +53,7 @@
     "server": "yarn build && cd ./server && node server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "parse": "cd ./src/parser && node parser.js && node filter.js && node parseTitle.js && cd ../../"
+    "parse": "cd ./src/parser && node parser.js && node parseTitle.js && cd ../../"
   },
   "eslintConfig": {
     "extends": "react-app"

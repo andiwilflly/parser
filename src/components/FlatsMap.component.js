@@ -40,6 +40,7 @@ class FlatsMap extends React.Component {
     flats = {};
     notInMapFlats = {};
 
+    isShowNotInMapFlats = observable.box(false);
     selectedFlatId = observable.box(null);
     hoveredFlatData = observable({
         id: '',
@@ -178,14 +179,19 @@ class FlatsMap extends React.Component {
     render() {
         return (
             <div>
-                <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
-                    <h4>Not found in map</h4>
-                    { Object.values(this.notInMapFlats).map((flat, i)=> {
-                        return <p key={i}><a href={flat.link} target="_blank">{ flat.address }</a></p>
-                    })}
-                </div>
+                <button style={{ position: 'fixed', right: 10, top: 10, zIndex: 2 }}
+                        onClick={ ()=> this.isShowNotInMapFlats.set(!this.isShowNotInMapFlats.get()) }>
+                    { !this.isShowNotInMapFlats.get() ? 'Показать квартиры не на карте' : 'Скрыть квартиры не на карте' }
+                </button>
+                { this.isShowNotInMapFlats.get() ?
+                    <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
+                        { Object.values(this.notInMapFlats).map((flat, i)=> {
+                            return <p key={i}><a href={flat.link} target="_blank">{ flat.address }</a></p>
+                        })}
+                    </div>
+                    : null }
 
-                <div id="map" style={{ width: '100wv', height: '100vh' }} >
+                <div id="map" style={{ width: '100wv', height: '100vh' }}>
                     <div id="popup" />
                 </div>
 
