@@ -17,6 +17,11 @@ import OSM from 'ol/source/OSM';
 // Offers
 import DB_FLATS from "../parser/reports/parsedOffers.json";
 
+// import GEOCODER from './geocoder.util';
+//
+// GEOCODER('Украина Киев улица Маяковского 63а');
+// GEOCODER('Украина Киев улица Маяковского 63');
+
 function randomInteger(min, max) {
     // получить случайное число от (min-0.5) до (max+0.5)
     let rand = min - 0.5 + Math.random() * (max - min + 1);
@@ -24,7 +29,7 @@ function randomInteger(min, max) {
 }
 
 const platform = new window.H.service.Platform({
-    apikey: 'H6XyiCT0w1t9GgTjqhRXxDMrVj9h78ya3NuxlwM7XUs'
+    apikey: 'yNXTO7pg5KdL_J8_BkDe0_PUDGfbTdwagSXAUs37pTY'
 });
 
 
@@ -33,6 +38,7 @@ class FlatsMap extends React.Component {
 
     MAP = null;
     flats = {};
+    notInMapFlats = {};
 
     selectedFlatId = observable.box(null);
 
@@ -76,44 +82,43 @@ class FlatsMap extends React.Component {
     async getLocations() {
         for(const flat of DB_FLATS) {
 
-            // await new Promise(resolve => {
-            //     const geocoder = platform.getGeocodingService();
-            //     geocoder.geocode(
-            //         {
-            //             searchText: `Украина Киев ${flat.address}`,
-            //             jsonattributes : 1
-            //         },
-            //         (result)=> {
-            //             var locations = result.response.view[0].result;
-            //             console.log(locations, "locations!");
-            //             resolve();
-            //         },
-            //         (e)=> {
-            //             console.log('error', e);
-            //             resolve();
-            //         }
-            //     );
-            // });
+            await new Promise(resolve => {
+                const geocoder = platform.getGeocodingService();
+                geocoder.geocode(
+                    {
+                        searchText: `${flat.address}, Київ, 02095, Україна`,
+                        jsonattributes : 1
+                    },
+                    (result)=> {
+                        let locations = result.response.view[0];
+                        if(locations && locations.result && locations.result.length) {
+                            const relevance = locations.result[0].relevance;
+                            const location = locations.result[0].location;
+                            const position = location.displayPosition;
+                            const address = location.address;
 
-            await this.props.mapBoxClient.geocoding
-                .forwardGeocode({
-                    query: `Украина Киев ${flat.address}`,
-                    autocomplete: false,
-                    limit: 1
-                })
-                .send()
-                .then((response)=> {
-                    if (
-                        response &&
-                        response.body &&
-                        response.body.features &&
-                        response.body.features.length
-                    ) {
-                        const axes = response.body.features[0].center;
-                        this.createFlat(flat, axes);
-                        // this.createFlat(flat, [axes[0] + (Math.random()/1000), axes[1] + (Math.random()/1000)]);
+                            // Not found in map
+                            if(relevance < 0.7 ) {
+                                this.notInMapFlats[flat.link] = flat;
+                                return resolve();
+                            }
+
+                            this.createFlat({ ...flat, address }, [position.longitude, position.latitude]); // latitude longitude
+                            resolve();
+                        } else {
+                            // Not found in map
+                            this.notInMapFlats[flat.link] = flat;
+                            resolve();
+                        }
+
+
+                    },
+                    (e)=> {
+                        console.log('error', e);
+                        resolve();
                     }
-                });
+                );
+            });
         }
     }
 
@@ -160,7 +165,7 @@ class FlatsMap extends React.Component {
 
 
                 info.tooltip('hide')
-                    .attr('data-original-title', `${feature.get('title')} (${feature.get('price')})`)
+                    .attr('data-original-title', `${feature.values_.address.label } (${feature.get('price')})`)
                     .tooltip('fixTitle')
                     .tooltip('show');
                 this.MAP.getViewport().style.cursor = 'pointer';
@@ -174,6 +179,7 @@ class FlatsMap extends React.Component {
             const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
             if (flatDot) {
                 info.tooltip('hide');
+                console.log(flatDot.values_);
                 this.selectedFlatId.set(flatDot.values_.link);
             } else {
                 this.selectedFlatId.set(null);
@@ -194,18 +200,9 @@ class FlatsMap extends React.Component {
         return (
             <div>
                 <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
-                    {/*{ this.dots.map((dot, i)=> {*/}
-                    {/*    const link = this.flats[dot.values_.link];*/}
-                    {/*    return <div key={i} style={{ background: link.visited ? 'red' : 'lightgray' }}>*/}
-                    {/*        {dot.values_.address} | { link.location[0] } : { link.location[1] }*/}
-                    {/*    </div>*/}
-                    {/*})}*/}
-                    { DB_FLATS.map((flat, i)=> {
-                        const link = this.flats[flat.link];
-                        if(!link) return null;
-                        return <div key={i} style={{ background: link.visited ? 'red' : 'lightgray' }}>
-                            {flat.address} | { link.location[0] } : { link.location[1] }
-                        </div>
+                    <h4>Not found in map</h4>
+                    { Object.values(this.notInMapFlats).map((flat, i)=> {
+                        return <p key={i}><a href={flat.link} target="_blank">{ flat.address }</a></p>
                     })}
                 </div>
 
@@ -248,7 +245,7 @@ class FlatsMap extends React.Component {
                         <br/>
                         <b style={{ color: 'orange' }}>{ this.selectedFlat.price }</b>
                         <br/>
-                        <i>{ this.selectedFlat.address }</i>
+                        <i>{ this.selectedFlat.address.label }</i>
                         <br/>
                         <i style={{ fontSize: 11, color: 'gray' }}>{ this.selectedFlat.date }</i>
                         <hr />

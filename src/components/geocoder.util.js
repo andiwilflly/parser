@@ -1,8 +1,12 @@
+var platform = new window.H.service.Platform({
+    apikey: 'yNXTO7pg5KdL_J8_BkDe0_PUDGfbTdwagSXAUs37pTY'
+});
 
-function geocode(platform) {
+
+function geocode(place) {
     var geocoder = platform.getGeocodingService(),
         geocodingParameters = {
-            searchText: 'Украина Киев улица Маяковского 63а',
+            searchText: place || 'Украина Киев улица Маяковского 63а',
             jsonattributes : 1
         };
 
@@ -31,10 +35,7 @@ function onError(error) {
 
 //Step 1: initialize communication with the platform
 // In your own code, replace variable window.apikey with your own apikey
-var platform = new window.H.service.Platform({
-    apikey: 'H6XyiCT0w1t9GgTjqhRXxDMrVj9h78ya3NuxlwM7XUs'
-});
 
 
 // Now use the map as required...
-geocode(platform);
+export default geocode;
