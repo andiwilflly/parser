@@ -41,6 +41,11 @@ class FlatsMap extends React.Component {
     notInMapFlats = {};
 
     selectedFlatId = observable.box(null);
+    hoveredFlatData = observable({
+        id: '',
+        top: '',
+        left: ''
+    });
 
 
     async componentDidMount() {
@@ -76,6 +81,7 @@ class FlatsMap extends React.Component {
 
 
     get selectedFlat() { return this.flats[this.selectedFlatId.get()].flat; }
+    get hoveredFlat() { return this.flats[this.hoveredFlatData.id] ? this.flats[this.hoveredFlatData.id].flat : null; }
     get dots() { return Object.values(this.flats).map(flat => flat.dot); }
 
 
@@ -146,40 +152,10 @@ class FlatsMap extends React.Component {
 
 
     createPopup() {
-        const info = window.$('#info');
-        info.tooltip({
-            animation: false,
-            trigger: 'manual'
-        });
-
-        const displayFeatureInfo = (pixel)=> {
-            info.css({
-                left: pixel[0] + 'px',
-                top: (pixel[1] - 25) + 'px'
-            });
-            const feature = this.MAP.forEachFeatureAtPixel(pixel, (feature)=> feature);
-            if(feature) {
-
-                this.flats[feature.get('link')].visited = true;
-                this.forceUpdate();
-
-
-                info.tooltip('hide')
-                    .attr('data-original-title', `${feature.values_.address.label } (${feature.get('price')})`)
-                    .tooltip('fixTitle')
-                    .tooltip('show');
-                this.MAP.getViewport().style.cursor = 'pointer';
-            } else {
-                info.tooltip('hide');
-                this.MAP.getViewport().style.cursor = 'inherit';
-            }
-        };
-
         this.MAP.on('click', (event)=> {
             const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
             if (flatDot) {
-                info.tooltip('hide');
-                console.log(flatDot.values_);
+                this.hoveredFlatData.id = '';
                 this.selectedFlatId.set(flatDot.values_.link);
             } else {
                 this.selectedFlatId.set(null);
@@ -187,11 +163,14 @@ class FlatsMap extends React.Component {
         });
 
         this.MAP.on('pointermove', (event)=> {
-            if (event.dragging) {
-                info.tooltip('hide');
-                return;
-            }
-            displayFeatureInfo(this.MAP.getEventPixel(event.originalEvent));
+            if(event.dragging) return this.hoveredFlatData.id = '';
+
+            const pixel = this.MAP.getEventPixel(event.originalEvent);
+            const feature = this.MAP.forEachFeatureAtPixel(pixel, (feature)=> feature);
+            this.hoveredFlatData.id = feature ? feature.values_.link : '';
+            this.hoveredFlatData.left = pixel[0];
+            this.hoveredFlatData.top = pixel[1] + 25;
+            this.MAP.getViewport().style.cursor = feature ? 'pointer' : 'inherit';
         });
     }
 
@@ -209,12 +188,24 @@ class FlatsMap extends React.Component {
                 <div id="map" style={{ width: '100wv', height: '100vh' }} >
                     <div id="popup" />
                 </div>
-                <div id="info" style={{
-                    position: 'absolute',
-                    height: 1,
-                    width: 1,
-                    zIndex: 100
-                }}/>
+
+                { this.hoveredFlat ?
+                    <div id="smallPopup" style={{
+                        position: 'fixed',
+                        background: 'white',
+                        padding: 5,
+                        maxWidth: 250,
+                        top: this.hoveredFlatData.top,
+                        boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
+                        left: this.hoveredFlatData.left,
+                        zIndex: 100
+                    }}>
+                        <div style={{ fontSize: 12 }}>{ this.hoveredFlat.title }</div>
+                        <div style={{ color: 'orange', fontSize: 14 }}>{ this.hoveredFlat.price }</div>
+                        <hr/>
+                        <div style={{ fontSize: 10 }}><i>{ this.hoveredFlat.address.label }</i></div>
+                    </div>
+                    : null }
 
                 { this.selectedFlatId.get() ?
                     <div id="info" style={{
