@@ -9,30 +9,10 @@ async function init() {
 
     let restOffers = 0;
     let parsedOffers = offers.map(offer => {
-        let options = {
-            shouldSort: false,
-            includeScore: false,
-            includeMatches: false, // TODO
-            threshold: 0.3,
-
-            // tokenize: true,
-            // matchAllTokens: false,
-
-            location: 0,
-            distance: 200,
-            maxPatternLength: 200,
-            minMatchCharLength: 3,
-            keys: ["title"]
-        };
-        let fuse = new Fuse([offer], options);
-
-
-        let streetMatch = kievStreets.filter(street => offer.title.includes(`${street}`) ? street : null);
-        streetMatch = streetMatch.sort(function (a, b) { return b.length - a.length; })[0];
-
-        //if(offer.title.includes('Лаврухина')) console.log(offer.title, ' | ' ,streetMatch );
 
         // Streets
+        let streetMatch = kievStreets.filter(street => offer.title.includes(`${street}`) ? street : null);
+        streetMatch = streetMatch.sort(function (a, b) { return b.length - a.length; })[0];
         if(streetMatch && streetMatch.length >= 4) {
             let sub = 'улица ';
             if(offer.title.includes('Ул.') || offer.title.includes('ул') || offer.title.includes('вул')) sub = 'улица';
@@ -66,6 +46,7 @@ async function init() {
             };
         }
 
+
         // Subways
         const subwayMatch = Object.keys(kievPlaces.subways).find(subway => offer.title.includes(subway) ? subway : null);
         if(subwayMatch) {
@@ -76,6 +57,7 @@ async function init() {
         }
 
 
+        // JK
         if(
             (
                 offer.title.match('ЖК ') ||
@@ -94,18 +76,28 @@ async function init() {
 
 
         // Districts
+        let options = {
+            shouldSort: false,
+            includeScore: false,
+            includeMatches: false, // TODO
+            threshold: 0.3,
+            location: 0,
+            distance: 200,
+            maxPatternLength: 200,
+            minMatchCharLength: 3,
+            keys: ["title"]
+        };
+        let fuse = new Fuse([offer], options);
         const districtMatch = kievPlaces.districts.find(district => fuse.search(district).length);
         if(districtMatch) {
-            console.log('districtMatch =====>!', offer.title, districtMatch);
             return {
                 ...offer,
                 address: `район ${districtMatch}`
             };
         }
 
-        console.log('rest... ', offer.title);
+        //console.log('rest... ', offer.title);
         restOffers+=1;
-
         return offer;
     });
 

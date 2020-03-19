@@ -58,7 +58,7 @@ class FlatsMap extends React.Component {
             target: document.getElementById('map'),
             view: new View({
                 center: fromLonLat([30.5241, 50.4501]),
-                zoom: 10
+                zoom: 11
             })
         });
 
@@ -140,8 +140,8 @@ class FlatsMap extends React.Component {
 
         flatDot.setStyle(new Style({
             image: new CircleStyle({
-                radius: 5,
-                fill: new Fill({ color: 'blue' }),
+                radius: 4,
+                fill: new Fill({ color: '#1890ff' }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })
         }));
@@ -202,14 +202,45 @@ class FlatsMap extends React.Component {
                         position: 'fixed',
                         background: 'white',
                         padding: 5,
-                        maxWidth: 250,
+                        width: 320,
                         top: this.hoveredFlatData.top,
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
                         left: this.hoveredFlatData.left,
                         zIndex: 100
                     }}>
-                        <div style={{ fontSize: 12 }}>{ this.hoveredFlat.title }</div>
-                        <div style={{ color: 'orange', fontSize: 14 }}>{ this.hoveredFlat.price }</div>
+                        <div style={{ fontSize: 12 }}>{ this.hoveredFlat.title }</div><br/>
+                        <b style={{ color: '#1890ff', fontSize: 14 }}>{ this.hoveredFlat.price }</b>
+                        <hr/>
+                        <div style={{
+                            width: '100%',
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            height: 100,
+                            background: 'whitesmoke',
+                            justifyContent: 'start'
+                        }}>
+                            <img src={ this.hoveredFlat.images[0] }
+                                 style={{
+                                     maxWidth: 100,
+                                     objectFit: 'contain',
+                                     margin: 1,
+                                     maxHeight: 100
+                                 }} />
+                            <img src={ this.hoveredFlat.images[1] }
+                                 style={{
+                                     maxWidth: 100,
+                                     objectFit: 'contain',
+                                     margin: 1,
+                                     maxHeight: 100
+                                 }} />
+                            <img src={ this.hoveredFlat.images[2] }
+                                 style={{
+                                     maxWidth: 100,
+                                     objectFit: 'contain',
+                                     margin: 1,
+                                     maxHeight: 100
+                                 }} />
+                        </div>
                         <hr/>
                         <div style={{ fontSize: 10 }}><i>{ this.hoveredFlat.address.label }</i></div>
                     </div>
@@ -243,7 +274,7 @@ class FlatsMap extends React.Component {
 
                         <a href={ this.selectedFlat.link} target='_blank'>{ this.selectedFlat.title }</a>
                         <br/>
-                        <b style={{ color: 'orange' }}>{ this.selectedFlat.price }</b>
+                        <b style={{ color: '#1890ff' }}>{ this.selectedFlat.price }</b>
                         <br/>
                         <i>{ this.selectedFlat.address.label }</i>
                         <br/>

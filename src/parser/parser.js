@@ -83,6 +83,21 @@ async function start() {
     browser.close();
 
     console.log('PARSER:END');
+
+    // Save new [offers] to history
+    offers.forEach(offer => {
+        let flatsHistory = fs.readFileSync(__dirname + `/reports/flatsHistory.json`);
+        flatsHistory = [...new Set(JSON.parse(flatsHistory))];
+        if(!flatsHistory.includes(offer.title)) {
+            flatsHistory.push(offer.title);
+            fs.writeFileSync(__dirname + `/reports/flatsHistory.json`, JSON.stringify(flatsHistory, null, 4));
+        } else {
+            console.log('old offer');
+        }
+    });
+
+    console.log('PARSER:HISTORY:SAVED');
+
     fs.writeFileSync(__dirname + `/reports/offers.json`, JSON.stringify(offers, null, 4));
 }
 
