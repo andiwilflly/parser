@@ -1,15 +1,38 @@
 const fs = require('fs');
+const Fuse = require('fuse.js');
 const offers = Object.values(require('./reports/offers.json'));
-const kievStreets = require('./kievStreets.json');
+const kievStreets = require('./kievData/kievStreets.json');
+const kievPlaces = require('./kievData/kievPlaces.json');
+
 
 async function init() {
 
+    let restOffers = 0;
     let parsedOffers = offers.map(offer => {
+        let options = {
+            shouldSort: false,
+            includeScore: false,
+            includeMatches: false, // TODO
+            threshold: 0.3,
+
+            // tokenize: true,
+            // matchAllTokens: false,
+
+            location: 0,
+            distance: 200,
+            maxPatternLength: 200,
+            minMatchCharLength: 3,
+            keys: ["title"]
+        };
+        let fuse = new Fuse([offer], options);
+
+
         let streetMatch = kievStreets.filter(street => offer.title.includes(`${street}`) ? street : null);
         streetMatch = streetMatch.sort(function (a, b) { return b.length - a.length; })[0];
 
         //if(offer.title.includes('Лаврухина')) console.log(offer.title, ' | ' ,streetMatch );
 
+        // Streets
         if(streetMatch && streetMatch.length >= 4) {
             let sub = 'улица ';
             if(offer.title.includes('Ул.') || offer.title.includes('ул') || offer.title.includes('вул')) sub = 'улица';
@@ -31,6 +54,8 @@ async function init() {
             if(offer.title.includes('наб ')) sub = 'набережная';
             if(offer.title.includes(' наб')) sub = 'набережная';
             if(offer.title.includes(' проезд')) sub = 'проезд';
+            if(offer.title.includes(' шоссе')) sub = 'шоссе';
+            if(offer.title.includes(' ш. ')) sub = 'шоссе';
 
             const houseNumberStr = ` ${offer.title.split(streetMatch)[1]}`;
             const houseNumber = houseNumberStr.match(/[ ][\d\/]+[-]?[\W\w]/);
@@ -40,6 +65,16 @@ async function init() {
                 address: `${sub} ${streetMatch} ${houseNumber || ''}`
             };
         }
+
+        // Subways
+        const subwayMatch = Object.keys(kievPlaces.subways).find(subway => offer.title.includes(subway) ? subway : null);
+        if(subwayMatch) {
+            return {
+                ...offer,
+                address: kievPlaces.subways[subwayMatch]
+            };
+        }
+
 
         if(
             (
@@ -57,10 +92,24 @@ async function init() {
             };
         }
 
+
+        // Districts
+        const districtMatch = kievPlaces.districts.find(district => fuse.search(district).length);
+        if(districtMatch) {
+            console.log('districtMatch =====>!', offer.title, districtMatch);
+            return {
+                ...offer,
+                address: `район ${districtMatch}`
+            };
+        }
+
         console.log('rest... ', offer.title);
+        restOffers+=1;
 
         return offer;
     });
+
+    console.log('TOTAL/REST', offers.length, '/', restOffers);
 
     // Deduplicate
     const uniqTitle = [ ...new Set(parsedOffers.map(offer => offer.title)) ];

@@ -7,7 +7,6 @@ import 'ol/ol.css';
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import Overlay from 'ol/Overlay';
 import Point from 'ol/geom/Point';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {Circle as CircleStyle, Fill, Stroke, Icon, Style} from 'ol/style';
@@ -79,6 +78,13 @@ class FlatsMap extends React.Component {
     async getLocations() {
         for(const flat of DB_FLATS) {
 
+            // LS load
+            if(window.localStorage.getItem(flat.link)) {
+                const flatLS = JSON.parse(window.localStorage.getItem(flat.link));
+                this.createFlat(flatLS.flat, flatLS.position) // latitude longitude
+                continue;
+            }
+
             await new Promise(resolve => {
                 const geocoder = platform.getGeocodingService();
                 geocoder.geocode(
@@ -97,10 +103,16 @@ class FlatsMap extends React.Component {
                             // Not found in map
                             if(relevance < 0.7 ) {
                                 this.notInMapFlats[flat.link] = flat;
+                                // LS save not found flat
                                 return resolve();
                             }
 
                             this.createFlat({ ...flat, address }, [position.longitude, position.latitude]); // latitude longitude
+                            // LS save
+                            window.localStorage.setItem(flat.link, JSON.stringify({
+                                flat: { ...flat, address },
+                                position: [position.longitude, position.latitude]
+                            }));
                             resolve();
                         } else {
                             // Not found in map
@@ -176,7 +188,7 @@ class FlatsMap extends React.Component {
                 { this.isShowNotInMapFlats.get() ?
                     <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
                         { Object.values(this.notInMapFlats).map((flat, i)=> {
-                            return <p key={i}><a href={flat.link} target="_blank">{ flat.address }</a></p>
+                            return <p key={i}><a href={flat.link} target="_blank">{ flat.title }</a></p>
                         })}
                     </div>
                     : null }
@@ -208,6 +220,7 @@ class FlatsMap extends React.Component {
                         position: 'fixed',
                         bottom: 5,
                         right: 5,
+                        zIndex: 101,
                         overflow: 'auto',
                         maxHeight: '80vh',
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',

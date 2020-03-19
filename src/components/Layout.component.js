@@ -1,6 +1,4 @@
 import React from 'react';
-import mapboxgl from 'mapbox-gl';
-import { Layout, Radio, Menu } from 'antd';
 import 'react-image-lightbox/style.css';
 
 import { observable } from "mobx";
@@ -9,9 +7,7 @@ import { observer } from "mobx-react";
 // Models
 import DBModel from "../models/DB.model";
 // Components
-import AllMap from "./AllMap.component";
 import FlatsMap from "./FlatsMap.component";
-import OffersList from "./OffersList.component";
 
 
 class LayoutComponent extends React.Component {
