@@ -140,8 +140,8 @@ class FlatsMap extends React.Component {
 
         flatDot.setStyle(new Style({
             image: new CircleStyle({
-                radius: 4,
-                fill: new Fill({ color: '#1890ff' }),
+                radius: 6,
+                fill: new Fill({ color: 'red' }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })
         }));

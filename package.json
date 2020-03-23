@@ -27,6 +27,7 @@
     "puppeteer-extra-plugin-adblocker": "^2.11.3",
     "puppeteer-extra-plugin-anonymize-ua": "^2.2.8",
     "puppeteer-extra-plugin-stealth": "^2.4.9",
+    "puppeteer-page-proxy": "^1.2.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-google-maps": "^9.4.5",

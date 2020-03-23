@@ -14,6 +14,7 @@ puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 const offers = {};
 // const url = 'https://www.olx.ua/nedvizhimost/doma/prodazha-domov/kiev/?search%5Bfilter_float_price%3Ato%5D=75000&search%5Bfilter_float_price%3Afrom%5D=20000&search%5Bfilter_float_total_floors%3Ato%5D=3&search%5Bfilter_float_total_area%3Afrom%5D=90&search%5Bfilter_float_land_area%3Afrom%5D=15&search%5Bphotos%5D=1&search%5Bdist%5D=15&currency=USD';
 const url = 'https://www.olx.ua/nedvizhimost/kvartiry-komnaty/prodazha-kvartir-komnat/kiev/q-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B8%D1%80%D0%B0/?search%5Bfilter_float_price%3Afrom%5D=20000&search%5Bfilter_float_price%3Ato%5D=75000&search%5Bfilter_float_floor%3Afrom%5D=2&search%5Bfilter_float_total_area%3Afrom%5D=65&search%5Bfilter_float_number_of_rooms%3Afrom%5D=3&search%5Bphotos%5D=1&currency=USD';
+// const url = 'http://us4.freeproxy.win/index.php?q=ztak1qegkGCssK6Rps6xZamUZKfKyqye3p_Lz9Clq2XR2JHYqM_TqmKkptClw62wY6OnqMnHsJ3FZM3YwqSrn9iPm9Wh1MKlZKSgyK2RqmRZd2Vep6dbeZRcpJSGdmdbqJJVqmWLmWFafWiIb5Ree2RYd3GKqmdanGeHppFXeWaVoaPLldjEmVpuecmgzq2cppKbpdTHqpTUqcvFxldqd8zUn9NZm6VuZ2lnk2eIrJyVpZihipt4m82j1sfTkZ2i1cOkxaTYypSaXmqkq9FebHhwbG6VlmZb15zD1MSaXGuoyJnSqMvTkJulpsSrwZ-jo6KnXpinnKfTpIeXpW9pXNnHkdiXzoZmd5-gz6vHq5aan6Sa2cWqpNiYzsHCpJyXi5VxzKbVzlZqfXSZbIisnJWlmKGKm3ibzaPWx9ORnaLVw6TFotvOk5qrltKdwaumo6CoXpinnKfTpIeXpW9qXNnHkdiXzoZmd6mf0qvRrFxpd3Jqi8mrp9ac0MXab4yJqg';
 let browser = null;
 let TOTAL_PAGES = 50;
 
@@ -21,11 +22,32 @@ let TOTAL_PAGES = 50;
 async function parsePage(browser, number = 1) {
     console.log('✨ ENTER page', number);
 
+    // const page = await browser.newPage();
+    // await page.goto(`https://freeproxy.win/`, {
+    //     waitUntil: 'networkidle2'
+    // });
+
+    // await page.focus('#inputurl');
+    // await page.keyboard.type(url);
+    //
+    // await page.waitFor(500);
+    // await page.$eval('#surfbtn', $elem => $elem.click());
+    // await page.waitFor(5000);
+
+
     const page = await browser.newPage();
     await page.goto(`${url}&page=${number}`, {
         waitUntil: 'networkidle2'
     });
     await page.waitFor(1000);
+
+    // await page.authenticate({
+    //     username: 'joel',
+    //     password: 'browserless-rocks',
+    // });
+    // await page.setExtraHTTPHeaders({
+    //     'SomeHeader': 'test'
+    // });
 
     const maxLinks = await page.evaluate(()=> {
         const $links = document.querySelectorAll('.item.fleft');
@@ -40,6 +62,8 @@ async function parsePage(browser, number = 1) {
         for(let i = 0; i < links.length; i++) {
             console.log('ENTER sub page', number, i);
             if(!links[i]) continue;
+
+            await page.waitFor(500);
             await page.goto(links[i], { waitUntil: 'networkidle2' });
 
             try {
@@ -78,14 +102,20 @@ async function parsePage(browser, number = 1) {
 async function start() {
     console.log('PARSER:START');
 
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+        headless: false,
+        // ignoreHTTPSErrors: true,
+        // args: [
+        //     '--proxy-server=188.134.1.20:63756'
+        // ]
+    });
     await parsePage(browser, 1);
     browser.close();
 
     console.log('PARSER:END');
 
     // Save new [offers] to history
-    offers.forEach(offer => {
+    Object.values(offers).forEach(offer => {
         let flatsHistory = fs.readFileSync(__dirname + `/reports/flatsHistory.json`);
         flatsHistory = [...new Set(JSON.parse(flatsHistory))];
         if(!flatsHistory.includes(offer.title)) {
