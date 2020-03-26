@@ -10,11 +10,11 @@ import View from 'ol/View';
 import Point from 'ol/geom/Point';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {Circle as CircleStyle, Fill, Stroke, Icon, Style} from 'ol/style';
-import {fromLonLat} from 'ol/proj';
+import { fromLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 // Offers
-import DB_FLATS from "../parser/reports/parsedOffers.json";
+import DB_FLATS from "../@PARSER/reports/olx.offers.parsed.json";
 
 
 const platform = new window.H.service.Platform({
@@ -89,7 +89,7 @@ class FlatsMap extends React.Component {
                 const geocoder = platform.getGeocodingService();
                 geocoder.geocode(
                     {
-                        searchText: `${flat.address}, Київ, 02095, Україна`,
+                        searchText: `${flat.address}, ${flat.district}, Київ, 02095, Україна`,
                         jsonattributes : 1
                     },
                     (result)=> {
@@ -219,26 +219,12 @@ class FlatsMap extends React.Component {
                             background: 'whitesmoke',
                             justifyContent: 'start'
                         }}>
-                            <img src={ this.hoveredFlat.images[0] }
+                            <img src={ this.hoveredFlat.img }
                                  style={{
-                                     maxWidth: 100,
+                                     maxWidth: 200,
                                      objectFit: 'contain',
                                      margin: 1,
-                                     maxHeight: 100
-                                 }} />
-                            <img src={ this.hoveredFlat.images[1] }
-                                 style={{
-                                     maxWidth: 100,
-                                     objectFit: 'contain',
-                                     margin: 1,
-                                     maxHeight: 100
-                                 }} />
-                            <img src={ this.hoveredFlat.images[2] }
-                                 style={{
-                                     maxWidth: 100,
-                                     objectFit: 'contain',
-                                     margin: 1,
-                                     maxHeight: 100
+                                     maxHeight: 200
                                  }} />
                         </div>
                         <hr/>
@@ -287,18 +273,13 @@ class FlatsMap extends React.Component {
                             background: 'whitesmoke',
                             justifyContent: 'start'
                         }}>
-                            { this.selectedFlat.images.map(src => {
-                                return (
-                                    <img src={ src }
-                                         key={src}
-                                         style={{
-                                             maxWidth: 150,
-                                             objectFit: 'contain',
-                                             margin: 2,
-                                             maxHeight: 150
-                                         }} />
-                                )
-                            }) }
+                            <img src={ this.selectedFlat.img }
+                                 style={{
+                                     maxWidth: 150,
+                                     objectFit: 'contain',
+                                     margin: 2,
+                                     maxHeight: 150
+                                 }} />
                         </div>
                         <hr/>
                         <div>
