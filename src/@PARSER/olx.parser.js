@@ -37,8 +37,10 @@ async function parsePage(browser, number = 1) {
                 return {
                     img: $row.querySelector('.fleft') ? $row.querySelector('.fleft').getAttribute('src') : 'https://www.samsung.com/etc/designs/smg/global/imgs/support/cont/NO_IMG_600x600.png',
                     title: $row.querySelector('.link').innerText,
-                    link: $row.querySelector('.link').getAttribute('href') ,
-                    district: $row.querySelector('.bottom-cell .lheight16').firstElementChild.innerText
+                    link: $row.querySelector('.link').getAttribute('href'),
+                    price: $row.querySelector('.price').innerText,
+                    district: $row.querySelector('.bottom-cell .lheight16').firstElementChild.innerText,
+                    source: 'olx'
                 }
             })
         });

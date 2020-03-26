@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Fuse = require('fuse.js');
-const offers = Object.values(require('./reports/olx.offers.json'));
+const offers = [...Object.values(require('./reports/olx.offers.json')), ...Object.values(require('./reports/domik.ria.offers.json'))];
 const kievStreets = require('../parser/kievData/kievStreets.json');
 const kievPlaces = require('../parser/kievData/kievPlaces.json');
 
@@ -114,7 +114,7 @@ async function init() {
     const uniqTitle = [ ...new Set(parsedOffers.map(offer => offer.title)) ];
     parsedOffers = uniqTitle.map(title => parsedOffers.find(offer => offer.title === title));
 
-    fs.writeFileSync(__dirname + `/reports/olx.offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
+    fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
 }
 
 init();
