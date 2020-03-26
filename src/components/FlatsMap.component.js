@@ -30,7 +30,9 @@ class FlatsMap extends React.Component {
     notInMapFlats = {};
 
     isShowNotInMapFlats = observable.box(false);
-    selectedFlatId = observable.box(null);
+    clickedFlats = observable({
+        ids: []
+    });
     hoveredFlatsData = observable({
         ids: [],
         top: '',
@@ -70,7 +72,7 @@ class FlatsMap extends React.Component {
     }
 
 
-    get selectedFlat() { return this.flats[this.selectedFlatId.get()].flat; }
+    get selectedFlats() { return this.clickedFlats.ids.map(link => this.flats[link].flat); }
     get hoveredFlats() { return this.hoveredFlatsData.ids.map(link => this.flats[link].flat); }
     get dots() { return Object.values(this.flats).map(flat => flat.dot); }
 
@@ -155,13 +157,9 @@ class FlatsMap extends React.Component {
 
     createPopup() {
         this.MAP.on('click', (event)=> {
-            const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
-            if (flatDot) {
-                this.hoveredFlatsData.ids = [];
-                this.selectedFlatId.set(flatDot.values_.link);
-            } else {
-                this.selectedFlatId.set(null);
-            }
+            const features = this.MAP.getFeaturesAtPixel(event.pixel);
+            this.hoveredFlatsData.ids = [];
+            this.clickedFlats.ids = features.map(feature => feature.values_.link);
         });
 
         this.MAP.on('pointermove', (event)=> {
@@ -176,6 +174,36 @@ class FlatsMap extends React.Component {
             this.MAP.getViewport().style.cursor = features.length ? 'pointer' : 'inherit';
         });
     }
+
+
+    renderFlat = (flat, size = 100)=> {
+        return (
+            <div key={ flat.title }
+                 style={{ width: size*1.5, padding: 3, background: 'lightgray' }}>
+                <a href={ flat.link }
+                   target="_blank"
+                   style={{ fontSize: 12 }}>{ flat.title }</a><br/>
+                <b style={{ color: '#1890ff', fontSize: 14 }}>{ flat.price }</b>
+                <div style={{
+                    width: size,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    height: size,
+                    margin: '4px 0',
+                    justifyContent: 'start'
+                }}>
+                    <img src={ DB_FLATS.find(f => f.title === flat.title).img }
+                         style={{
+                             maxWidth: size - 10,
+                             objectFit: 'contain',
+                             margin: 1,
+                             maxHeight: size - 5
+                         }} />
+                </div>
+                <div style={{ fontSize: 10 }}><i>{ flat.district }, { flat.address.label }</i></div>
+            </div>
+        )
+    };
 
 
     render() {
@@ -197,7 +225,7 @@ class FlatsMap extends React.Component {
                     <div id="popup" />
                 </div>
 
-                { this.hoveredFlats.length ?
+                { this.hoveredFlatsData.ids.length ?
                     <div id="smallPopup" style={{
                         position: 'fixed',
                         background: 'white',
@@ -212,37 +240,11 @@ class FlatsMap extends React.Component {
                         left: this.hoveredFlatsData.left,
                         zIndex: 100
                     }}>
-                        { this.hoveredFlats.map(hoveredFlat => {
-                            return (
-                                <div key={ hoveredFlat.title }
-                                     style={{ width: 150, padding: 3, background: 'whitesmoke' }}>
-                                    <a href={ hoveredFlat.link }
-                                       style={{ fontSize: 12 }}>{ hoveredFlat.title }</a><br/>
-                                    <b style={{ color: '#1890ff', fontSize: 14 }}>{ hoveredFlat.price }</b>
-                                    <div style={{
-                                        width: 150,
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        height: 100,
-                                        margin: '4px 0',
-                                        justifyContent: 'start'
-                                    }}>
-                                        <img src={ DB_FLATS.find(flat => flat.title === hoveredFlat.title).img }
-                                             style={{
-                                                 maxWidth: 147,
-                                                 objectFit: 'contain',
-                                                 margin: 1,
-                                                 maxHeight: 100
-                                             }} />
-                                    </div>
-                                    <div style={{ fontSize: 10 }}><i>{ hoveredFlat.district }, { hoveredFlat.address.label }</i></div>
-                                </div>
-                            )
-                        }) }
+                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 100)) }
                     </div>
                     : null }
 
-                { this.selectedFlatId.get() ?
+                { this.clickedFlats.ids.length ?
                     <div id="info" style={{
                         position: 'fixed',
                         bottom: 5,
@@ -250,51 +252,17 @@ class FlatsMap extends React.Component {
                         zIndex: 101,
                         overflow: 'auto',
                         maxHeight: '80vh',
+                        maxWidth: '60vw',
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
-                        width: 500,
-                        minHeight: 500,
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
+                        gridTemplateRows: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
+                        gridColumnGap: 2,
+                        gridRowGap: 2,
                         background: 'whitesmoke',
                         padding: 5
                     }}>
-                        { this.selectedFlat.isNew ?
-                            <div style={{
-                                background: 'green',
-                                color: 'white',
-                                position: 'absolute',
-                                top: 60,
-                                right: 10,
-                                padding: 5,
-                                borderRadius: 5
-                            }}>new</div>
-                            : null }
-
-                        <a href={ this.selectedFlat.link} target='_blank'>{ this.selectedFlat.title }</a>
-                        <br/>
-                        <b style={{ color: '#1890ff' }}>{ this.selectedFlat.price }</b>
-                        <br/>
-                        <i>{ this.selectedFlat.address.label }</i>
-                        <br/>
-                        <i style={{ fontSize: 11, color: 'gray' }}>{ this.selectedFlat.date }</i>
-                        <hr />
-                        <div style={{
-                            width: '100%',
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            background: 'whitesmoke',
-                            justifyContent: 'start'
-                        }}>
-                            <img src={ this.selectedFlat.img }
-                                 style={{
-                                     maxWidth: 150,
-                                     objectFit: 'contain',
-                                     margin: 2,
-                                     maxHeight: 150
-                                 }} />
-                        </div>
-                        <hr/>
-                        <div>
-                            { this.selectedFlat.description }
-                        </div>
+                        { this.selectedFlats.map(flat => this.renderFlat(flat, 250)) }
                     </div>
                     : null }
             </div>
