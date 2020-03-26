@@ -31,8 +31,8 @@ class FlatsMap extends React.Component {
 
     isShowNotInMapFlats = observable.box(false);
     selectedFlatId = observable.box(null);
-    hoveredFlatData = observable({
-        id: '',
+    hoveredFlatsData = observable({
+        ids: [],
         top: '',
         left: ''
     });
@@ -71,13 +71,12 @@ class FlatsMap extends React.Component {
 
 
     get selectedFlat() { return this.flats[this.selectedFlatId.get()].flat; }
-    get hoveredFlat() { return this.flats[this.hoveredFlatData.id] ? this.flats[this.hoveredFlatData.id].flat : null; }
+    get hoveredFlats() { return this.hoveredFlatsData.ids.map(link => this.flats[link].flat); }
     get dots() { return Object.values(this.flats).map(flat => flat.dot); }
 
 
     async getLocations() {
         for(const flat of DB_FLATS) {
-
             // LS load
             if(window.localStorage.getItem(flat.link)) {
                 const flatLS = JSON.parse(window.localStorage.getItem(flat.link));
@@ -158,7 +157,7 @@ class FlatsMap extends React.Component {
         this.MAP.on('click', (event)=> {
             const flatDot = this.MAP.getFeaturesAtPixel(event.pixel)[0];
             if (flatDot) {
-                this.hoveredFlatData.id = '';
+                this.hoveredFlatsData.ids = [];
                 this.selectedFlatId.set(flatDot.values_.link);
             } else {
                 this.selectedFlatId.set(null);
@@ -166,14 +165,15 @@ class FlatsMap extends React.Component {
         });
 
         this.MAP.on('pointermove', (event)=> {
-            if(event.dragging) return this.hoveredFlatData.id = '';
+            if(event.dragging) return this.hoveredFlatsData.ids = [];
 
             const pixel = this.MAP.getEventPixel(event.originalEvent);
-            const feature = this.MAP.forEachFeatureAtPixel(pixel, (feature)=> feature);
-            this.hoveredFlatData.id = feature ? feature.values_.link : '';
-            this.hoveredFlatData.left = pixel[0];
-            this.hoveredFlatData.top = pixel[1] + 25;
-            this.MAP.getViewport().style.cursor = feature ? 'pointer' : 'inherit';
+            const features = this.MAP.getFeaturesAtPixel(pixel);
+
+            this.hoveredFlatsData.ids = features.map(feature => feature.values_.link);
+            this.hoveredFlatsData.left = pixel[0];
+            this.hoveredFlatsData.top = pixel[1] + 25;
+            this.MAP.getViewport().style.cursor = features.length ? 'pointer' : 'inherit';
         });
     }
 
@@ -197,38 +197,48 @@ class FlatsMap extends React.Component {
                     <div id="popup" />
                 </div>
 
-                { this.hoveredFlat ?
+                { this.hoveredFlats.length ?
                     <div id="smallPopup" style={{
                         position: 'fixed',
                         background: 'white',
-                        padding: 5,
-                        width: 320,
-                        top: this.hoveredFlatData.top,
+                        lineHeight: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
+                        gridTemplateRows: `repeat(${Math.ceil(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
+                        gridColumnGap: 2,
+                        gridRowGap: 2,
+                        top: this.hoveredFlatsData.top,
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
-                        left: this.hoveredFlatData.left,
+                        left: this.hoveredFlatsData.left,
                         zIndex: 100
                     }}>
-                        <div style={{ fontSize: 12 }}>{ this.hoveredFlat.title }</div><br/>
-                        <b style={{ color: '#1890ff', fontSize: 14 }}>{ this.hoveredFlat.price }</b>
-                        <hr/>
-                        <div style={{
-                            width: '100%',
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            height: 100,
-                            background: 'whitesmoke',
-                            justifyContent: 'start'
-                        }}>
-                            <img src={ this.hoveredFlat.img }
-                                 style={{
-                                     maxWidth: 200,
-                                     objectFit: 'contain',
-                                     margin: 1,
-                                     maxHeight: 200
-                                 }} />
-                        </div>
-                        <hr/>
-                        <div style={{ fontSize: 10 }}><i>{ this.hoveredFlat.address.label }</i></div>
+                        { this.hoveredFlats.map(hoveredFlat => {
+                            return (
+                                <div key={ hoveredFlat.title }
+                                     style={{ width: 150, padding: 3, background: 'whitesmoke' }}>
+                                    <a href={ hoveredFlat.link }
+                                       style={{ fontSize: 12 }}>{ hoveredFlat.title }</a><br/>
+                                    <b style={{ color: '#1890ff', fontSize: 14 }}>{ hoveredFlat.price }</b>
+                                    <div style={{
+                                        width: 150,
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        height: 100,
+                                        margin: '4px 0',
+                                        justifyContent: 'start'
+                                    }}>
+                                        <img src={ DB_FLATS.find(flat => flat.title === hoveredFlat.title).img }
+                                             style={{
+                                                 maxWidth: 147,
+                                                 objectFit: 'contain',
+                                                 margin: 1,
+                                                 maxHeight: 100
+                                             }} />
+                                    </div>
+                                    <div style={{ fontSize: 10 }}><i>{ hoveredFlat.district }, { hoveredFlat.address.label }</i></div>
+                                </div>
+                            )
+                        }) }
                     </div>
                     : null }
 

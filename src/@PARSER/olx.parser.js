@@ -35,7 +35,7 @@ async function parsePage(browser, number = 1) {
         const rows = await page.evaluate(()=> {
             return [...document.querySelectorAll('#offers_table tr.wrap') ].map($row => {
                 return {
-                    img: $row.querySelector('.fleft').getAttribute('src'),
+                    img: $row.querySelector('.fleft') ? $row.querySelector('.fleft').getAttribute('src') : 'https://www.samsung.com/etc/designs/smg/global/imgs/support/cont/NO_IMG_600x600.png',
                     title: $row.querySelector('.link').innerText,
                     link: $row.querySelector('.link').getAttribute('href') ,
                     district: $row.querySelector('.bottom-cell .lheight16').firstElementChild.innerText

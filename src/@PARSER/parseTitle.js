@@ -10,8 +10,16 @@ async function init() {
     let restOffers = 0;
     let parsedOffers = offers.map(offer => {
 
+        const subwayMatch = Object.keys(kievPlaces.subways).find(subway => offer.title.includes(subway) ? subway : null);
+
         // Streets
         let streetMatch = kievStreets.filter(street => offer.title.includes(`${street}`) ? street : null);
+
+        // Case when we have subway Житомирская and streets like: [Житомирская, Полевая, Хуевая]
+        if(subwayMatch && streetMatch.length > 1) {
+            streetMatch = streetMatch.filter(street => street !== subwayMatch);
+        }
+
         streetMatch = streetMatch.sort(function (a, b) { return b.length - a.length; })[0];
         if(streetMatch && streetMatch.length >= 4) {
             let sub = 'улица ';
@@ -44,11 +52,10 @@ async function init() {
                 ...offer,
                 address: `${sub} ${streetMatch} ${houseNumber || ''}`
             };
-        }
+        } else
 
 
         // Subways
-        const subwayMatch = Object.keys(kievPlaces.subways).find(subway => offer.title.includes(subway) ? subway : null);
         if(subwayMatch) {
             return {
                 ...offer,
