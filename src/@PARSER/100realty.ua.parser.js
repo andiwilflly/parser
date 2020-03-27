@@ -43,7 +43,7 @@ async function parsePage(browser, number = 0) {
                     link: 'https://100realty.ua' + link,
                     price: $row.querySelector('.cost-field > span').innerText,
                     district: '', //$row.querySelector('.i-block') ? $row.querySelector('.i-block').innerText : '',
-                    color: '#ff55c4',
+                    color: '#ff78c9',
                     source: '100realty.ua'
                 }
             }).filter(Boolean);
@@ -64,7 +64,7 @@ async function parsePage(browser, number = 0) {
 async function start() {
     console.log(' 100realty.ua PARSER:START');
 
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({ headless: true });
     await parsePage(browser, 0);
     browser.close();
 

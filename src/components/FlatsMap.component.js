@@ -42,7 +42,7 @@ class FlatsMap extends React.Component {
 
 
     async componentDidMount() {
-        await this.getLocations();
+        this.getLocations();
 
         const vectorSource = new VectorSource({
             features: this.dots
@@ -61,11 +61,11 @@ class FlatsMap extends React.Component {
             target: document.getElementById('map'),
             view: new View({
                 center: fromLonLat([30.5241, 50.4501]),
-                zoom: 11
+                zoom: 12
             })
         });
 
-        this.MAP.set('layers', []);
+        // this.MAP.set('layers', []);
         this.MAP.render();
 
         this.createPopup();
@@ -118,6 +118,10 @@ class FlatsMap extends React.Component {
                 );
             });
         }
+
+        this.MAP.set('layers', []);
+        this.MAP.render();
+
     }
 
 
@@ -129,7 +133,7 @@ class FlatsMap extends React.Component {
 
         flatDot.setStyle(new Style({
             image: new CircleStyle({
-                radius: 6,
+                radius: 5,
                 fill: new Fill({ color: flat.color }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })

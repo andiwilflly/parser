@@ -27,7 +27,7 @@ async function parsePage(browser, number = 1) {
             waitUntil: 'networkidle2'
         });
 
-        const totalPages = totalPages || await page.evaluate(()=> {
+        totalPages = totalPages || await page.evaluate(()=> {
             const $links = document.querySelectorAll('.item.fleft');
             if(!$links) return totalPages;
             return +$links[$links.length-1].innerText
