@@ -79,9 +79,9 @@ class FlatsMap extends React.Component {
 
 
     async getLocations() {
+        const geocoder = platform.getGeocodingService();
         for(const flat of DB_FLATS) {
             await new Promise(resolve => {
-                const geocoder = platform.getGeocodingService();
                 geocoder.geocode(
                     {
                         searchText: `${flat.address}, ${flat.district}, Київ, 02095, Україна`,
@@ -192,8 +192,8 @@ class FlatsMap extends React.Component {
                              maxHeight: size - 5
                          }} />
                 </div>
-                <div style={{ fontSize: 10 }}><i>{ flat.district }, { flat.address.label }</i></div>
-                <div style={{ fontSize: 10, color: 'gray' }}><i>({ flat.source })</i></div>
+                <div style={{ fontSize: 10 }}><i>{ flat.address.label }</i></div>
+                <div style={{ fontSize: 10, color: flat.color }}><i>({ flat.source })</i></div>
             </div>
         )
     };
@@ -239,7 +239,7 @@ class FlatsMap extends React.Component {
                         left: this.hoveredFlatsData.left,
                         zIndex: 100
                     }}>
-                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 120)) }
+                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 100)) }
                     </div>
                     : null }
 
@@ -261,7 +261,7 @@ class FlatsMap extends React.Component {
                         background: 'whitesmoke',
                         padding: 5
                     }}>
-                        { this.selectedFlats.map(flat => this.renderFlat(flat, 250)) }
+                        { this.selectedFlats.map(flat => this.renderFlat(flat, 120)) }
                     </div>
                     : null }
             </div>

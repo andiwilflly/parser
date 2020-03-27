@@ -1,6 +1,10 @@
 const fs = require('fs');
 const Fuse = require('fuse.js');
-const offers = [...Object.values(require('./reports/olx.offers.json')), ...Object.values(require('./reports/domik.ria.offers.json'))];
+const offers = [
+    ...Object.values(require('./reports/olx.offers.json')),
+    ...Object.values(require('./reports/domik.ria.offers.json')),
+    ...Object.values(require('./reports/100realty.ua.offers.json'))
+];
 const kievStreets = require('../parser/kievData/kievStreets.json');
 const kievPlaces = require('../parser/kievData/kievPlaces.json');
 
@@ -105,8 +109,8 @@ async function init() {
 
         //console.log('rest... ', offer.title);
         restOffers+=1;
-        return offer;
-    });
+        return null;
+    }).filter(Boolean);
 
     console.log('TOTAL/REST', offers.length, '/', restOffers);
 
