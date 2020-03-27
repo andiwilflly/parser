@@ -43,6 +43,7 @@ async function parsePage(browser, number = 0) {
                     link: 'https://dom.ria.com' + link,
                     price: $row.querySelector('.size22').innerText,
                     district: '', //$row.querySelector('.i-block') ? $row.querySelector('.i-block').innerText : '',
+                    color: '#ffa02b',
                     source: 'domik.ria'
                 }
             }).filter(Boolean);

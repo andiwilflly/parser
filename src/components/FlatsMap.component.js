@@ -14,7 +14,7 @@ import { fromLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 // Offers
-import DB_FLATS from "../@PARSER/reports/olx.offers.parsed.json";
+import DB_FLATS from "../@PARSER/reports/offers.parsed.json";
 
 
 const platform = new window.H.service.Platform({
@@ -29,6 +29,7 @@ class FlatsMap extends React.Component {
     flats = {};
     notInMapFlats = {};
 
+    isMapReady = observable.box(false);
     isShowNotInMapFlats = observable.box(false);
     clickedFlats = observable({
         ids: []
@@ -68,7 +69,7 @@ class FlatsMap extends React.Component {
         this.MAP.render();
 
         this.createPopup();
-        this.forceUpdate();
+        this.isMapReady.set(true);
     }
 
 
@@ -79,13 +80,6 @@ class FlatsMap extends React.Component {
 
     async getLocations() {
         for(const flat of DB_FLATS) {
-            // LS load
-            if(window.localStorage.getItem(flat.link)) {
-                const flatLS = JSON.parse(window.localStorage.getItem(flat.link));
-                this.createFlat(flatLS.flat, flatLS.position) // latitude longitude
-                continue;
-            }
-
             await new Promise(resolve => {
                 const geocoder = platform.getGeocodingService();
                 geocoder.geocode(
@@ -104,16 +98,10 @@ class FlatsMap extends React.Component {
                             // Not found in map
                             if(relevance < 0.7 ) {
                                 this.notInMapFlats[flat.link] = flat;
-                                // LS save not found flat
                                 return resolve();
                             }
 
                             this.createFlat({ ...flat, address }, [position.longitude, position.latitude]); // latitude longitude
-                            // LS save
-                            window.localStorage.setItem(flat.link, JSON.stringify({
-                                flat: { ...flat, address },
-                                position: [position.longitude, position.latitude]
-                            }));
                             resolve();
                         } else {
                             // Not found in map
@@ -142,7 +130,7 @@ class FlatsMap extends React.Component {
         flatDot.setStyle(new Style({
             image: new CircleStyle({
                 radius: 6,
-                fill: new Fill({ color: 'red' }),
+                fill: new Fill({ color: flat.color }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })
         }));
@@ -179,7 +167,11 @@ class FlatsMap extends React.Component {
     renderFlat = (flat, size = 100)=> {
         return (
             <div key={ flat.title }
-                 style={{ width: size*1.5, padding: 3, background: 'lightgray' }}>
+                 style={{
+                     width: size*1.5,
+                     padding: 3,
+                     border: `1px solid ${flat.color}`
+                 }}>
                 <a href={ flat.link }
                    target="_blank"
                    style={{ fontSize: 12 }}>{ flat.title }</a><br/>
@@ -201,6 +193,7 @@ class FlatsMap extends React.Component {
                          }} />
                 </div>
                 <div style={{ fontSize: 10 }}><i>{ flat.district }, { flat.address.label }</i></div>
+                <div style={{ fontSize: 10, color: 'gray' }}><i>({ flat.source })</i></div>
             </div>
         )
     };
@@ -222,6 +215,12 @@ class FlatsMap extends React.Component {
                     : null }
 
                 <div id="map" style={{ width: '100wv', height: '100vh' }}>
+                    { this.isMapReady.get() ?
+                        null
+                        :
+                        <img src="https://freefrontend.com/assets/img/css-loaders/css-fun-Little-loader.gif"
+                             style={{ width: '100vw', height: '100vh' }} /> }
+
                     <div id="popup" />
                 </div>
 
@@ -232,7 +231,7 @@ class FlatsMap extends React.Component {
                         lineHeight: '100%',
                         display: 'grid',
                         gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
-                        gridTemplateRows: `repeat(${Math.ceil(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
+                        gridTemplateRows: `repeat(${Math.round(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
                         gridColumnGap: 2,
                         gridRowGap: 2,
                         top: this.hoveredFlatsData.top,
@@ -240,7 +239,7 @@ class FlatsMap extends React.Component {
                         left: this.hoveredFlatsData.left,
                         zIndex: 100
                     }}>
-                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 100)) }
+                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 120)) }
                     </div>
                     : null }
 

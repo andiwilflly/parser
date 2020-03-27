@@ -14,7 +14,7 @@ const offers = {};
 const url = 'https://www.olx.ua/nedvizhimost/kvartiry-komnaty/prodazha-kvartir-komnat/kiev/q-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B8%D1%80%D0%B0/?search%5Bfilter_float_price%3Afrom%5D=20000&search%5Bfilter_float_price%3Ato%5D=75000&search%5Bfilter_float_floor%3Afrom%5D=2&search%5Bfilter_float_total_area%3Afrom%5D=65&search%5Bfilter_float_number_of_rooms%3Afrom%5D=3&search%5Bphotos%5D=1&currency=USD';
 
 let browser = null;
-let totalPages = 50;
+let totalPages = 0;
 
 
 async function parsePage(browser, number = 1) {
@@ -27,7 +27,7 @@ async function parsePage(browser, number = 1) {
             waitUntil: 'networkidle2'
         });
 
-        const maxLinks = await page.evaluate(()=> {
+        const totalPages = totalPages || await page.evaluate(()=> {
             const $links = document.querySelectorAll('.item.fleft');
             if(!$links) return totalPages;
             return +$links[$links.length-1].innerText
@@ -40,16 +40,17 @@ async function parsePage(browser, number = 1) {
                     link: $row.querySelector('.link').getAttribute('href'),
                     price: $row.querySelector('.price').innerText,
                     district: $row.querySelector('.bottom-cell .lheight16').firstElementChild.innerText,
-                    source: 'olx'
+                    color: '#ff524d',
+                    source: 'OLX'
                 }
             })
         });
 
         rows.forEach(row => offers[row.title] = row);
-        console.log('page number: ', number, 'maxLinks: ', maxLinks);
+        console.log('page number: ', number, 'totalPages: ', totalPages);
 
         await page.close();
-        if(number < maxLinks) await parsePage(browser, number+1);
+        if(number < totalPages) await parsePage(browser, number+1);
     } catch(e) {
         console.log('✨OLX PAGE ERROR | ', e);
         await parsePage(browser, number+1);
