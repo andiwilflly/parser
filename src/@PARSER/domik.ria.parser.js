@@ -19,13 +19,14 @@ let totalPages = 0;
 
 async function parsePage(browser, number = 0) {
     try {
-
-        console.log('✨DOMIK.RIA ENTER page', number);
-
         const page = await browser.newPage();
         await page.goto(`${url}&page=${number}`, {
-            waitUntil: 'networkidle2'
+            // waitUntil: 'networkidle2'
         });
+
+        await page.waitFor(3000);
+
+        console.log('✨DOMIK.RIA ENTER page', number);
 
         totalPages = totalPages || await page.evaluate(()=> {
             const $links = document.querySelectorAll('.page-link');
@@ -65,6 +66,10 @@ async function start() {
     console.log('DOMIK.RIA PARSER:START');
 
     browser = await puppeteer.launch({ headless: true });
+    const context = browser.defaultBrowserContext();
+    context.overridePermissions("https://dom.ria.com", ["geolocation", "notifications"]);
+
+
     await parsePage(browser, 0);
     browser.close();
 

@@ -42,7 +42,7 @@ class FlatsMap extends React.Component {
 
 
     async componentDidMount() {
-        this.getLocations();
+        await this.getLocations();
 
         const vectorSource = new VectorSource({
             features: this.dots
@@ -65,7 +65,7 @@ class FlatsMap extends React.Component {
             })
         });
 
-        // this.MAP.set('layers', []);
+        this.MAP.set('layers', []);
         this.MAP.render();
 
         this.createPopup();
@@ -118,10 +118,6 @@ class FlatsMap extends React.Component {
                 );
             });
         }
-
-        this.MAP.set('layers', []);
-        this.MAP.render();
-
     }
 
 
@@ -168,34 +164,39 @@ class FlatsMap extends React.Component {
     }
 
 
-    renderFlat = (flat, size = 100)=> {
+    renderFlat = (flat, size = 100, isShowImg = true)=> {
         return (
             <div key={ flat.title }
                  style={{
                      width: size*1.5,
-                     padding: 3,
-                     border: `1px solid ${flat.color}`
+                     padding: 5,
+                     border: `2px solid ${flat.color}`
                  }}>
                 <a href={ flat.link }
                    target="_blank"
-                   style={{ fontSize: 12 }}>{ flat.title }</a><br/>
-                <b style={{ color: '#1890ff', fontSize: 14 }}>{ flat.price }</b>
-                <div style={{
-                    width: size,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    height: size,
-                    margin: '4px 0',
-                    justifyContent: 'start'
-                }}>
-                    <img src={ DB_FLATS.find(f => f.title === flat.title).img }
-                         style={{
-                             maxWidth: size - 10,
-                             objectFit: 'contain',
-                             margin: 1,
-                             maxHeight: size - 5
-                         }} />
-                </div>
+                   style={{ fontSize: 12 }}>{ flat.title }</a>
+                <hr/>
+                <b style={{ color: '#ff6a16', fontSize: 14 }}>{ flat.price }</b>
+                { isShowImg ?
+                    <div style={{
+                        width: size,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        height: size,
+                        margin: '4px 0',
+                        justifyContent: 'start'
+                    }}>
+                        <img src={ DB_FLATS.find(f => f.title === flat.title).img }
+                             style={{
+                                 maxWidth: size - 10,
+                                 objectFit: 'contain',
+                                 margin: 1,
+                                 maxHeight: size - 5
+                             }} />
+                    </div>
+                    :
+                    null }
+
                 <div style={{ fontSize: 10 }}><i>{ flat.address.label }</i></div>
                 <div style={{ fontSize: 10, color: flat.color }}><i>({ flat.source })</i></div>
             </div>
@@ -206,10 +207,10 @@ class FlatsMap extends React.Component {
     render() {
         return (
             <div>
-                <button style={{ position: 'fixed', right: 10, top: 10, zIndex: 2 }}
-                        onClick={ ()=> this.isShowNotInMapFlats.set(!this.isShowNotInMapFlats.get()) }>
-                    { !this.isShowNotInMapFlats.get() ? 'Показать квартиры не на карте' : 'Скрыть квартиры не на карте' }
-                </button>
+                {/*<button style={{ position: 'fixed', right: 10, top: 10, zIndex: 2 }}*/}
+                {/*        onClick={ ()=> this.isShowNotInMapFlats.set(!this.isShowNotInMapFlats.get()) }>*/}
+                {/*    { !this.isShowNotInMapFlats.get() ? 'Показать квартиры не на карте' : 'Скрыть квартиры не на карте' }*/}
+                {/*</button>*/}
                 { this.isShowNotInMapFlats.get() ?
                     <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
                         { Object.values(this.notInMapFlats).map((flat, i)=> {
@@ -236,21 +237,23 @@ class FlatsMap extends React.Component {
                         display: 'grid',
                         gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
                         gridTemplateRows: `repeat(${Math.round(Math.sqrt(this.hoveredFlats.length))}, 1fr)`,
-                        gridColumnGap: 2,
-                        gridRowGap: 2,
+                        gridColumnGap: 3,
+                        gridRowGap: 3,
                         top: this.hoveredFlatsData.top,
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
                         left: this.hoveredFlatsData.left,
                         zIndex: 100
                     }}>
-                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 100)) }
+                        { this.hoveredFlats.map(flat => this.renderFlat(flat, 100, false)) }
                     </div>
-                    : null }
+                    :
+                    null }
 
                 { this.clickedFlats.ids.length ?
                     <div id="info" style={{
                         position: 'fixed',
                         bottom: 5,
+                        lineHeight: '100%',
                         right: 5,
                         zIndex: 101,
                         overflow: 'auto',
@@ -260,8 +263,8 @@ class FlatsMap extends React.Component {
                         display: 'grid',
                         gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
                         gridTemplateRows: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
-                        gridColumnGap: 2,
-                        gridRowGap: 2,
+                        gridColumnGap: 3,
+                        gridRowGap: 3,
                         background: 'whitesmoke',
                         padding: 5
                     }}>
