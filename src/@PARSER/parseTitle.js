@@ -118,6 +118,20 @@ async function init() {
     const uniqTitle = [ ...new Set(parsedOffers.map(offer => offer.title)) ];
     parsedOffers = uniqTitle.map(title => parsedOffers.find(offer => offer.title === title));
 
+
+    const history = JSON.parse(fs.readFileSync(__dirname + '/utils/history.json', 'utf8'));
+
+    parsedOffers = parsedOffers.map(offer => {
+        const isNew = history[offer.title] === undefined;
+
+        history[offer.title] = new Date().toLocaleString();
+        return {
+            ...offer,
+            isNew
+        }
+    });
+
+    fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
     fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
 }
 

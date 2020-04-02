@@ -1,17 +1,18 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer-extra');
+const CONFIG = require('./utils/config.json');
+
 
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
-
 puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
-
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
+
 const offers = {};
 
-const url = 'https://dom.ria.com/ru/search/#category=1&realty_type=2&operation_type=1&state_id=10&city_id=10&inspected=0&period=0&notFirstFloor=0&notLastFloor=0&with_photo=1&banks_only=0&photos_count_from=0&inspected_realtors=1&limit=0&ch=209_f_3,209_t_0,214_f_60,234_t_75000,242_239,247_252,265_0,1644_1644,1645_1645';
+const url = `https://dom.ria.com/ru/search/#category=1&realty_type=2&operation_type=1&state_id=10&city_id=10&inspected=0&period=0&notFirstFloor=1&notLastFloor=1&with_photo=1&inspected_realtors=1&fullCategoryOperation=1_2_1&page=0&limit=20&sort=inspected_sort&ch=209_f_3,214_f_${CONFIG.minArea},234_f_${CONFIG.minPrice},234_t_${CONFIG.maxPrice},242_239,247_252,265_0,1644_1644,1645_1645`;
 
 let browser = null;
 let totalPages = 0;

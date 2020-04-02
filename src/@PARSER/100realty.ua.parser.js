@@ -1,17 +1,17 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer-extra');
+const CONFIG = require('./utils/config.json');
+
 
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
-
 puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
-
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
 const offers = {};
 
-const url = 'https://100realty.ua/realty_search/apartment/sale/nr_3,4,5_/st_60_/f_notfirst,notlast/p_20000_75000/cur_4/kch_2';
+const url = `https://100realty.ua/realty_search/apartment/sale/nr_3,4,5_/st_${CONFIG.minArea}_/f_notfirst,notlast/p_${CONFIG.minPrice}_${CONFIG.maxPrice}/cur_4/kch_2`;
 
 let browser = null;
 let totalPages = 0;
