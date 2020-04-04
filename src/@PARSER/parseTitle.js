@@ -112,7 +112,7 @@ async function init() {
         return null;
     }).filter(Boolean);
 
-    console.log('TOTAL/REST', offers.length, '/', restOffers);
+
 
     // Deduplicate
     const uniqTitle = [ ...new Set(parsedOffers.map(offer => offer.title)) ];
@@ -121,15 +121,19 @@ async function init() {
 
     const history = JSON.parse(fs.readFileSync(__dirname + '/utils/history.json', 'utf8'));
 
+    let newOffers = 0;
     parsedOffers = parsedOffers.map(offer => {
         const isNew = history[offer.title] === undefined;
 
         history[offer.title] = new Date().toLocaleString();
+        if(isNew) newOffers +=1;
         return {
             ...offer,
             isNew
         }
     });
+
+    console.log('TOTAL/NEW/REST', offers.length, '/', newOffers, '/', restOffers);
 
     fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
     fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));

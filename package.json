@@ -13,6 +13,7 @@
     "express-progressbar": "^2.0.0",
     "fs": "^0.0.1-security",
     "fuse.js": "^3.4.5",
+    "here-maps-node": "^0.0.2",
     "html-to-json": "^0.6.0",
     "http": "^0.0.0",
     "http-proxy": "^1.17.0",

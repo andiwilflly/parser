@@ -130,7 +130,7 @@ class FlatsMap extends React.Component {
         flatDot.setStyle(new Style({
             image: new CircleStyle({
                 radius: 5,
-                fill: new Fill({ color: flat.color }),
+                fill: new Fill({ color: flat.isNew ? 'green' : flat.color }),
                 stroke: new Stroke({ color: 'white', width: 1 })
             })
         }));
@@ -170,7 +170,7 @@ class FlatsMap extends React.Component {
                  style={{
                      width: size*1.5,
                      padding: 5,
-                     border: `2px solid ${flat.color}`
+                     border: `2px solid ${flat.isNew ? 'green' : flat.color}`
                  }}>
                 <a href={ flat.link }
                    target="_blank"
