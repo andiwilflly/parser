@@ -21,6 +21,7 @@
     "mapbox-gl": "^1.7.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.1",
+    "node-fetch": "^2.6.0",
     "ol": "^6.2.1",
     "proxysocket": "^1.2.0",
     "puppeteer": "^2.0.0",

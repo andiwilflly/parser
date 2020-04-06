@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fetch = require('node-fetch');
 const Fuse = require('fuse.js');
 const offers = [
     ...Object.values(require('./reports/olx.offers.json')),
@@ -8,6 +9,10 @@ const offers = [
 const kievStreets = require('../parser/kievData/kievStreets.json');
 const kievPlaces = require('../parser/kievData/kievPlaces.json');
 
+
+function geoCoderUrl(searchText) {
+    return `https://geocoder.ls.hereapi.com/6.2/geocode.json?xnlp=CL_JSMv3.1.14.0&apikey=yNXTO7pg5KdL_J8_BkDe0_PUDGfbTdwagSXAUs37pTY&searchText=${encodeURIComponent(`${searchText}, Київ, 02095, Україна`)}&jsonattributes=1`;
+}
 
 async function init() {
 
@@ -119,6 +124,16 @@ async function init() {
     parsedOffers = uniqTitle.map(title => parsedOffers.find(offer => offer.title === title));
 
 
+
+    parsedOffers = await Promise.all(parsedOffers.map(async offer => fetch(geoCoderUrl(offer.address))
+        .then(response => response.json())
+        .then(geo => ({
+            geo: geo.response.view[0].result[0],
+            ...offer
+        }))));
+
+    parsedOffers = parsedOffers.filter(offer => offer.geo.relevance >= 0.7 );
+
     const history = JSON.parse(fs.readFileSync(__dirname + '/utils/history.json', 'utf8'));
 
     let newOffers = 0;
@@ -133,9 +148,14 @@ async function init() {
         }
     });
 
-    console.log('TOTAL/NEW/REST', offers.length, '/', newOffers, '/', restOffers);
+    console.table({
+        TOTAL: offers.length,
+        GOOD: parsedOffers.length,
+        NEW: newOffers,
+        REST: restOffers
+    });
 
-    fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
+   // fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
     fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
 }
 
