@@ -1,4 +1,5 @@
 import React from "react";
+import Fuse from 'fuse.js';
 // MobX
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -17,14 +18,25 @@ import OSM from 'ol/source/OSM';
 import DB_FLATS from "../@PARSER/reports/offers.parsed.json";
 
 
-const platform = new window.H.service.Platform({
-    apikey: 'yNXTO7pg5KdL_J8_BkDe0_PUDGfbTdwagSXAUs37pTY'
-});
-
-
+const options = {
+    shouldSort: false,
+    includeScore: false,
+    includeMatches: false, // TODO
+    threshold: 0.25,
+    location: 0,
+    distance: 200,
+    maxPatternLength: 200,
+    minMatchCharLength: 3,
+    keys: [
+        "flat.title",
+        "flat.address.district",
+        "flat.address.label"
+    ]
+};
 
 class FlatsMap extends React.Component {
 
+    fuse = null;
     MAP = null;
     flats = {};
     notInMapFlats = {};
@@ -42,13 +54,13 @@ class FlatsMap extends React.Component {
 
 
     async componentDidMount() {
-        await this.getLocations();
+        this.getLocations();
 
         const vectorSource = new VectorSource({
             features: this.dots
         });
 
-        const vectorLayer = new VectorLayer({
+        this.vectorLayer = new VectorLayer({
             source: vectorSource
         });
 
@@ -57,7 +69,7 @@ class FlatsMap extends React.Component {
         });
 
         this.MAP = new Map({
-            layers: [tileLayer, vectorLayer],
+            layers: [tileLayer, this.vectorLayer],
             target: document.getElementById('map'),
             view: new View({
                 center: fromLonLat([30.5241, 50.4501]),
@@ -70,6 +82,8 @@ class FlatsMap extends React.Component {
 
         this.createPopup();
         this.isMapReady.set(true);
+
+        this.fuse = new Fuse(Object.values(this.flats), options);
     }
 
 
@@ -78,45 +92,12 @@ class FlatsMap extends React.Component {
     get dots() { return Object.values(this.flats).map(flat => flat.dot); }
 
 
-    async getLocations() {
-        const geocoder = platform.getGeocodingService();
+    getLocations() {
         for(const flat of DB_FLATS) {
-            await new Promise(resolve => {
-                geocoder.geocode(
-                    {
-                        searchText: `${flat.address}, ${flat.district}, Київ, 02095, Україна`,
-                        jsonattributes : 1
-                    },
-                    (result)=> {
-                        let locations = result.response.view[0];
-                        if(locations && locations.result && locations.result.length) {
-                            const relevance = locations.result[0].relevance;
-                            const location = locations.result[0].location;
-                            const position = location.displayPosition;
-                            const address = location.address;
-
-                            // Not found in map
-                            if(relevance < 0.7 ) {
-                                this.notInMapFlats[flat.link] = flat;
-                                return resolve();
-                            }
-
-                            this.createFlat({ ...flat, address }, [position.longitude, position.latitude]); // latitude longitude
-                            resolve();
-                        } else {
-                            // Not found in map
-                            this.notInMapFlats[flat.link] = flat;
-                            resolve();
-                        }
-
-
-                    },
-                    (e)=> {
-                        console.log('error', e);
-                        resolve();
-                    }
-                );
-            });
+            this.createFlat({
+                ...flat,
+                address: flat.geo.location.address
+            }, [flat.geo.location.displayPosition.longitude, flat.geo.location.displayPosition.latitude]); // latitude longitude
         }
     }
 
@@ -162,6 +143,24 @@ class FlatsMap extends React.Component {
             this.MAP.getViewport().style.cursor = features.length ? 'pointer' : 'inherit';
         });
     }
+
+
+    setFeatures(features) {
+        this.vectorLayer.getSource().clear();
+        this.vectorLayer.getSource().addFeatures(features);
+    }
+
+
+    timeout = null;
+    onSearch = (e)=> {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout((text)=> {
+            if(text.length <= 3) return this.setFeatures(this.dots); // Set all
+
+            this.setFeatures(this.fuse.search(text).map(flat => flat.dot));
+
+        }, 400, e.target.value);
+    };
 
 
     renderFlat = (flat, size = 100, isShowImg = true)=> {
@@ -211,6 +210,14 @@ class FlatsMap extends React.Component {
                 {/*        onClick={ ()=> this.isShowNotInMapFlats.set(!this.isShowNotInMapFlats.get()) }>*/}
                 {/*    { !this.isShowNotInMapFlats.get() ? 'Показать квартиры не на карте' : 'Скрыть квартиры не на карте' }*/}
                 {/*</button>*/}
+
+                <div style={{ position: 'fixed', right: 10, top: 10, zIndex: 2 }}>
+                    <input type="search"
+                           placeholder='Искать хату'
+                           onChange={ this.onSearch }
+                           style={{ outline: 'none', border: '1px solid #85be7a', width: 350, padding: 5 }} />
+                </div>
+
                 { this.isShowNotInMapFlats.get() ?
                     <div style={{ height: '100vh', overflow: 'auto', zIndex: 1, position: 'fixed', top: 0, left: 0, background: 'white', padding: 5, fontSize: 10 }}>
                         { Object.values(this.notInMapFlats).map((flat, i)=> {

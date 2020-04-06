@@ -132,7 +132,7 @@ async function init() {
             ...offer
         }))));
 
-    parsedOffers = parsedOffers.filter(offer => offer.geo.relevance >= 0.7 );
+    parsedOffers = parsedOffers.filter(offer => offer.geo.relevance > 0.75);
 
     const history = JSON.parse(fs.readFileSync(__dirname + '/utils/history.json', 'utf8'));
 
