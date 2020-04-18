@@ -155,8 +155,8 @@ async function init() {
         REST: restOffers
     });
 
-   // fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
-    fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
+   fs.writeFileSync(__dirname + "/utils/history.json", JSON.stringify(history, null, 4));
+   fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
 }
 
 init();

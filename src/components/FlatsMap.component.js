@@ -155,7 +155,7 @@ class FlatsMap extends React.Component {
     onSearch = (e)=> {
         clearTimeout(this.timeout);
         this.timeout = setTimeout((text)=> {
-            if(text.length <= 3) return this.setFeatures(this.dots); // Set all
+            if(text.length < 3) return this.setFeatures(this.dots); // Set all
 
             this.setFeatures(this.fuse.search(text).map(flat => flat.dot));
 
