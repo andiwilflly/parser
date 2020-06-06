@@ -127,10 +127,13 @@ async function init() {
 
     parsedOffers = await Promise.all(parsedOffers.map(async offer => fetch(geoCoderUrl(offer.address))
         .then(response => response.json())
-        .then(geo => ({
-            geo: geo.response.view[0].result[0],
-            ...offer
-        }))));
+        .then(geo => {
+            if(!geo.response.view[0]) return { geo: { relevance: 0 } };
+            return {
+                geo: geo.response.view[0].result[0],
+                ...offer
+            }
+        })));
 
     parsedOffers = parsedOffers.filter(offer => offer.geo.relevance > 0.75);
 
