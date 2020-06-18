@@ -12,7 +12,8 @@ puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
 const offers = {};
 
-const url = `https://dom.ria.com/ru/search/#category=1&realty_type=2&operation_type=1&state_id=10&city_id=10&inspected=0&period=0&notFirstFloor=1&notLastFloor=1&with_photo=1&inspected_realtors=1&fullCategoryOperation=1_2_1&page=0&limit=20&sort=inspected_sort&ch=209_f_3,214_f_${CONFIG.minArea},234_f_${CONFIG.minPrice},234_t_${CONFIG.maxPrice},242_239,247_252,265_0,1644_1644,1645_1645`;
+//const url = `https://dom.ria.com/ru/search/#category=1&realty_type=2&operation_type=1&state_id=10&city_id=10&inspected=0&period=0&notFirstFloor=1&notLastFloor=1&with_photo=1&inspected_realtors=1&fullCategoryOperation=1_2_1&page=0&limit=20&sort=inspected_sort&ch=209_f_3,214_f_${CONFIG.minArea},234_f_${CONFIG.minPrice},234_t_${CONFIG.maxPrice},242_239,247_252,265_0,1644_1644,1645_1645`;
+const url = `https://dom.ria.com/ru/search/#category=4&realty_type=5&operation_type=1&state_id=10&city_id=10&inspected=0&period=0&notFirstFloor=0&notLastFloor=0&limit=0&ch=215_f_${CONFIG.minArea},219_f_4,226_0,234_f_${CONFIG.minPrice},234_t_${CONFIG.maxPrice},242_239,265_0&page=0`;
 
 let browser = null;
 let totalPages = 0;
@@ -30,9 +31,8 @@ async function parsePage(browser, number = 0) {
         console.log('✨DOMIK.RIA ENTER page', number);
 
         totalPages = totalPages || await page.evaluate(()=> {
-            const $links = document.querySelectorAll('.page-link');
-            if(!$links) return totalPages;
-            return +$links[$links.length-2].innerText
+            return Math.max(...[...document.querySelectorAll('.pagerMobileScroll .page-link')]
+                .map($link => +$link.innerText).filter(Boolean));
         });
 
         const rows = await page.evaluate(()=> {
@@ -46,6 +46,7 @@ async function parsePage(browser, number = 0) {
                     price: $row.querySelector('.size22').innerText,
                     district: '', //$row.querySelector('.i-block') ? $row.querySelector('.i-block').innerText : '',
                     color: '#ffa02b',
+                    address: $row.querySelector('.size18 .blue').innerText,
                     source: 'domik.ria'
                 }
             }).filter(Boolean);

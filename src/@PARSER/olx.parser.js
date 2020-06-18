@@ -11,7 +11,8 @@ puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
 const offers = {};
 
-const url = `https://www.olx.ua/nedvizhimost/kvartiry-komnaty/prodazha-kvartir-komnat/kiev/q-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B8%D1%80%D0%B0/?search%5Bfilter_float_price%3Afrom%5D=${CONFIG.minPrice}&search%5Bfilter_float_price%3Ato%5D=${CONFIG.maxPrice}&search%5Bfilter_float_floor%3Afrom%5D=2&search%5Bfilter_float_total_area%3Afrom%5D=${CONFIG.minArea}&search%5Bfilter_float_number_of_rooms%3Afrom%5D=3&search%5Bphotos%5D=1&currency=USD`;
+// const url = `https://www.olx.ua/nedvizhimost/kvartiry-komnaty/prodazha-kvartir-komnat/kiev/q-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B8%D1%80%D0%B0/?search%5Bfilter_float_price%3Afrom%5D=${CONFIG.minPrice}&search%5Bfilter_float_price%3Ato%5D=${CONFIG.maxPrice}&search%5Bfilter_float_floor%3Afrom%5D=2&search%5Bfilter_float_total_area%3Afrom%5D=${CONFIG.minArea}&search%5Bfilter_float_number_of_rooms%3Afrom%5D=3&search%5Bphotos%5D=1&currency=USD`;
+const url = `https://www.olx.ua/nedvizhimost/doma/prodazha-domov/dom/kiev/?search%5Bfilter_float_price%3Afrom%5D=${CONFIG.minPrice}&search%5Bfilter_float_price%3Ato%5D=${CONFIG.maxPrice}&search%5Bfilter_float_total_area%3Afrom%5D=${CONFIG.minArea}&search%5Bfilter_float_land_area%3Afrom%5D=4&search%5Bphotos%5D=1&search%5Bdist%5D=10&currency=USD`;
 
 let browser = null;
 let totalPages = 0;
@@ -41,6 +42,7 @@ async function parsePage(browser, number = 1) {
                     price: $row.querySelector('.price').innerText,
                     district: $row.querySelector('.bottom-cell .lheight16').firstElementChild.innerText,
                     color: '#ff524d',
+                    address: $row.querySelector('.bottom-cell .breadcrumb.x-normal').innerText.trim(),
                     source: 'OLX'
                 }
             })

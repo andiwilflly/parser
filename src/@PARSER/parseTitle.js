@@ -18,6 +18,7 @@ async function init() {
 
     let restOffers = 0;
     let parsedOffers = offers.map(offer => {
+        return offer;
 
         const subwayMatch = Object.keys(kievPlaces.subways).find(subway => offer.title.includes(subway) ? subway : null);
 
@@ -112,7 +113,7 @@ async function init() {
             };
         }
 
-        //console.log('rest... ', offer.title);
+        console.log('rest... ', offer.address);
         restOffers+=1;
         return null;
     }).filter(Boolean);
@@ -135,7 +136,29 @@ async function init() {
             }
         }))).catch(e => console.log(e));
 
-    parsedOffers = parsedOffers.filter(offer => offer.geo.relevance > 0.75);
+
+    let badOffers = parsedOffers.filter(offer => offer.address && offer.address.split(',')[1] && offer.geo.relevance <= 0.75);
+    let moreGoodOffers = [];
+    badOffers = await Promise.all(badOffers.map(async offer => fetch(geoCoderUrl(offer.address.split(',')[1]))
+        .then(response => response.json())
+        .then(geo => {
+            console.log('=>', offer.address.split(',')[1], geo.response.view[0]);
+            if(!geo.response.view[0]) return { geo: { relevance: 0 } };
+            moreGoodOffers.push({
+                ...offer,
+                geo: geo.response.view[0].result[0],
+            });
+            return {
+                ...offer,
+                geo: geo.response.view[0].result[0],
+            }
+        }))).catch(e => console.log(e));
+
+
+    parsedOffers = [
+        ...parsedOffers.filter(offer => offer.geo.relevance > 0.75),
+        ...moreGoodOffers.filter(offer => offer.geo.relevance > 0.75),
+    ];
 
     const history = JSON.parse(fs.readFileSync(__dirname + '/utils/history.json', 'utf8'));
 

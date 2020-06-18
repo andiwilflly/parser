@@ -11,7 +11,8 @@ puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
 const offers = {};
 
-const url = `https://100realty.ua/realty_search/apartment/sale/nr_3,4,5_/st_${CONFIG.minArea}_/f_notfirst,notlast/p_${CONFIG.minPrice}_${CONFIG.maxPrice}/cur_4/kch_2`;
+//const url = `https://100realty.ua/realty_search/apartment/sale/nr_3,4,5_/st_${CONFIG.minArea}_/f_notfirst,notlast/p_${CONFIG.minPrice}_${CONFIG.maxPrice}/cur_4/kch_2`;
+const url = `https://100realty.ua/realty_search/house/sale/st_${CONFIG.minArea}_320/sln_4_/p_${CONFIG.minPrice}_${CONFIG.maxPrice}/cur_4`;
 
 let browser = null;
 let totalPages = 0;
@@ -44,6 +45,7 @@ async function parsePage(browser, number = 0) {
                     price: $row.querySelector('.cost-field > span').innerText,
                     district: '', //$row.querySelector('.i-block') ? $row.querySelector('.i-block').innerText : '',
                     color: '#ff78c9',
+                    address: $row.querySelector('.object-address > a').innerText,
                     source: '100realty.ua'
                 }
             }).filter(Boolean);
