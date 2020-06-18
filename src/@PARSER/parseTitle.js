@@ -133,7 +133,7 @@ async function init() {
                 geo: geo.response.view[0].result[0],
                 ...offer
             }
-        })));
+        }))).catch(e => console.log(e));
 
     parsedOffers = parsedOffers.filter(offer => offer.geo.relevance > 0.75);
 
@@ -162,4 +162,4 @@ async function init() {
    fs.writeFileSync(__dirname + `/reports/offers.parsed.json`, JSON.stringify(parsedOffers, null, 4));
 }
 
-init();
+init().catch(console.log);

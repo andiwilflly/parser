@@ -1,9 +1,9 @@
 {
-    "р‑н. Дарницкий ул. Горловская г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10941/1094152/109415297/109415297b.jpg",
-        "title": "р‑н. Дарницкий ул. Горловская г. Киев",
-        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-darnitskiy-gorlovskaya-ulitsa-16780953.html",
-        "price": "2 108 108 грн",
+    "р‑н. Соломенский ул. Кудряшова г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11238/1123802/112380225/112380225b.jpg",
+        "title": "р‑н. Соломенский ул. Кудряшова г. Киев",
+        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-solomenskiy-kudryashova-ulitsa-17139387.html",
+        "price": "2 284 946 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
@@ -12,25 +12,34 @@
         "img": "https://cdn.riastatic.com/photos/dom/photo/11144/1114443/111444381/111444381b.jpg",
         "title": "р‑н. Святошинский ул. Чернобыльская г. Киев",
         "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-svyatoshinskiy-chernobyilskaya-ulitsa-16949648.html",
-        "price": "2 067 568 грн",
+        "price": "2 016 129 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Дарницкий Кошица Александра улица г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10820/1082016/108201607/108201607b.jpg",
-        "title": "р‑н. Дарницкий Кошица Александра улица г. Киев",
-        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-darnitskiy-koshitsa-aleksandra-ulitsa-16401541.html",
-        "price": "1 986 487 грн",
+    "р‑н. Деснянский ул. Бальзака Оноре де ул. г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/10822/1082272/108227227/108227227b.jpg",
+        "title": "р‑н. Деснянский ул. Бальзака Оноре де ул. г. Киев",
+        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-desnyanskiy-balzaka-onore-de-ul-16570959.html",
+        "price": "1 922 043 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11210/1121000/112100096/112100096b.jpg",
-        "title": "г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-17119689.html",
-        "price": "2 081 081 грн",
+    "р‑н. Голосеевский ул. Академика Заболотного г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11234/1123474/112347466/112347466b.jpg",
+        "title": "р‑н. Голосеевский ул. Академика Заболотного г. Киев",
+        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-goloseevskiy-akademika-zabolotnogo-ulitsa-16506052.html",
+        "price": "2 043 011 грн",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "р‑н. Дарницкий ул. Азербайджанская г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11257/1125713/112571326/112571326b.jpg",
+        "title": "р‑н. Дарницкий ул. Азербайджанская г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-darnitskiy-azerbaydjanskaya-ulitsa-17166383.html",
+        "price": "2 016 129 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
@@ -44,128 +53,65 @@
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Голосеевский ул. Академика Заболотного г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11234/1123474/112347466/112347466b.jpg",
-        "title": "р‑н. Голосеевский ул. Академика Заболотного г. Киев",
-        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-goloseevskiy-akademika-zabolotnogo-ulitsa-16506052.html",
-        "price": "1 972 973 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
     "р‑н. Святошинский Чернобильская улица г. Киев": {
         "img": "https://cdn.riastatic.com/photos/dom/photo/11172/1117293/111729396/111729396b.jpg",
         "title": "р‑н. Святошинский Чернобильская улица г. Киев",
         "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-svyatoshinskiy-chernobilskaya-ulitsa-16956461.html",
-        "price": "2 067 568 грн",
+        "price": "2 016 129 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "c. Бортничи Харченко Евгения г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11191/1119109/111910973/111910973b.jpg",
-        "title": "c. Бортничи Харченко Евгения г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-bortnichi-17103181.html",
-        "price": "1 486 487 грн",
+    "р‑н. Дарницкий шоссе Харьковское г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11265/1126515/112651595/112651595b.jpg",
+        "title": "р‑н. Дарницкий шоссе Харьковское г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-darnitskiy-harkovskoe-shosse-17174888.html",
+        "price": "1 612 903 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "ЖК Dibrova Park, р‑н Подольский, ул. Северо-Сырецкая, Киев": {
-        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Dibrova-Park-Kyev-plan__122728-298x198x90.jpg",
-        "title": "ЖК Dibrova Park, р‑н Подольский, ул. Северо-Сырецкая, Киев",
-        "link": "https://dom.ria.comhttp://dom.ria.com/secure_redirect/?url=https%3A%2F%2Fdibrovapark.com.ua%2Fua%2Fflats%2F%3Futm_source%3Ddomria%26utm_medium%3Dclick_on_banner%26utm_campaign%3Dnewbuildings_domria&hash=NR_kF4XWkS9lPB5x0nVUEg&newbuildId=6941&userId=8474861&commercial=1&zoneId=42",
-        "price": "1 511 277",
+    "ЖК «Пектораль», р‑н Святошинский, бул. Кольцова, 7а, Киев": {
+        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Pektoral-Kyev-plan__160682-298x198x90.jpg",
+        "title": "ЖК «Пектораль», р‑н Святошинский, бул. Кольцова, 7а, Киев",
+        "link": "https://dom.ria.com/novostroyka-zhk-pektoral-planirovki-4606/?sectionId=6981&planId=60347&_ref=rsp",
+        "price": "1 876 014",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Соломенский Отрадный проспект г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10629/1062967/106296714/106296714b.jpg",
-        "title": "р‑н. Соломенский Отрадный проспект г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-solomenskiy-16498445.html",
-        "price": "1 579 487 грн",
+    "р‑н. Днепровский просп. Ватутина Генерала пр-т г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11270/1127093/112709375/112709375b.jpg",
+        "title": "р‑н. Днепровский просп. Ватутина Генерала пр-т г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-dneprovskiy-vatutina-generala-pr-t-17181362.html",
+        "price": "1 881 720 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Соломенский ул. Шовкуненко ул. г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10874/1087404/108740429/108740429b.jpg",
-        "title": "р‑н. Соломенский ул. Шовкуненко ул. г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-solomenskiy-shovkunenko-ul-16439993.html",
-        "price": "2 054 054 грн",
+    "р‑н. Оболонский ул. Героев Днепра г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11168/1116847/111684770/111684770b.jpg",
+        "title": "р‑н. Оболонский ул. Героев Днепра г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-obolonskiy-geroev-dnepra-ulitsa-17080165.html",
+        "price": "2 150 538 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Оболонский ул. Вышгородская г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11219/1121906/112190610/112190610b.jpg",
-        "title": "р‑н. Оболонский ул. Вышгородская г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-obolonskiy-vyshgorodskaya-17128400.html",
-        "price": "2 027 027 грн",
+    "р‑н. Дарницкий ул. Гмыри Бориса ул. г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11278/1127808/112780835/112780835b.jpg",
+        "title": "р‑н. Дарницкий ул. Гмыри Бориса ул. г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-darnitskiy-gmyri-borisa-ul-17186703.html",
+        "price": "1 854 839 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Дарницкий просп. Николая Бажана г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11045/1104558/110455865/110455865b.jpg",
-        "title": "р‑н. Дарницкий просп. Николая Бажана г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-darnitskiy-nikolaya-bajana-prospekt-16949482.html",
-        "price": "1 540 541 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "ЖК Варшавский Плюс, р‑н Подольский, ул. Маршала Гречко, Киев": {
-        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Varshavskyi-Plius-Kyev-plan__170470-298x198x90.jpg",
-        "title": "ЖК Варшавский Плюс, р‑н Подольский, ул. Маршала Гречко, Киев",
-        "link": "https://dom.ria.comhttp://dom.ria.com/secure_redirect/?url=https%3A%2F%2Fstolitsagroup.com%2Fua%2Fnewbuild%2F264%2F266%2Fvarshavskiy-plus%2F%3Futm_source%3Ddomria%26utm_medium%3Dclick_on_banner%26utm_campaign%3Dnewbuildings_domria&hash=N8NrpIZvrpdUSblOf88Mgg&newbuildId=6261&userId=7576289&commercial=1&zoneId=42",
-        "price": "1 541 776",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "р‑н. Днепровский ул. Каунасская г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11230/1123074/112307485/112307485b.jpg",
-        "title": "р‑н. Днепровский ул. Каунасская г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-dneprovskiy-kaunasskaya-ulitsa-17140773.html",
-        "price": "1 653 144 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "р‑н. Голосеевский ул. Китаевская ул. г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10822/1082290/108229079/108229079b.jpg",
-        "title": "р‑н. Голосеевский ул. Китаевская ул. г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-goloseevskiy-kitaevskaya-ul-16557301.html",
-        "price": "1 621 622 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "р‑н. Святошинский Кольцевая дорога г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11184/1118417/111841723/111841723b.jpg",
-        "title": "р‑н. Святошинский Кольцевая дорога г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-svyatoshinskiy-17096176.html",
-        "price": "1 594 595 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "р‑н. Оболонский ул. Полярная ул. г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/11027/1102722/110272231/110272231b.jpg",
-        "title": "р‑н. Оболонский ул. Полярная ул. г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-obolonskiy-polyarnaya-ul-16928931.html",
-        "price": "1 810 811 грн",
-        "district": "",
-        "color": "#ffa02b",
-        "source": "domik.ria"
-    },
-    "р‑н. Дарницкий ул. Декабристов г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10998/1099864/109986469/109986469b.jpg",
-        "title": "р‑н. Дарницкий ул. Декабристов г. Киев",
-        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-darnitskiy-dekabristov-ulitsa-16899021.html",
-        "price": "1 945 946 грн",
+    "г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11210/1121000/112100096/112100096b.jpg",
+        "title": "г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-17119689.html",
+        "price": "2 069 892 грн",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
@@ -179,11 +125,65 @@
         "color": "#ffa02b",
         "source": "domik.ria"
     },
-    "р‑н. Деснянский ул. Бальзака Оноре де ул. г. Киев": {
-        "img": "https://cdn.riastatic.com/photos/dom/photo/10822/1082272/108227227/108227227b.jpg",
-        "title": "р‑н. Деснянский ул. Бальзака Оноре де ул. г. Киев",
-        "link": "https://dom.ria.com/ru/realty-perevireno-prodaja-kvartira-kiev-desnyanskiy-balzaka-onore-de-ul-16570959.html",
-        "price": "1 932 433 грн",
+    "ул. Петра Калнышевского г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/10999/1099957/109995798/109995798b.jpg",
+        "title": "ул. Петра Калнышевского г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-petra-kalnyshevskogo-ulitsa-16900155.html",
+        "price": "2 204 301 грн",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "р‑н. Подольский ул. Маршала Гречко г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11038/1103843/110384361/110384361b.jpg",
+        "title": "р‑н. Подольский ул. Маршала Гречко г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-podolskiy-marshala-grechko-ulitsa-16941533.html",
+        "price": "2 217 742 грн",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "р‑н. Голосеевский ул. Антоновича г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11134/1113471/111347148/111347148b.jpg",
+        "title": "р‑н. Голосеевский ул. Антоновича г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-goloseevskiy-antonovicha-ulitsa-16951571.html",
+        "price": "2 419 355 грн",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "р‑н. Подольский ул. Гречко Маршала ул. г. Киев": {
+        "img": "https://cdn.riastatic.com/photos/dom/photo/11217/1121755/112175501/112175501b.jpg",
+        "title": "р‑н. Подольский ул. Гречко Маршала ул. г. Киев",
+        "link": "https://dom.ria.com/ru/realty-prodaja-kvartira-kiev-podolskiy-grechko-marshala-ul-17127078.html",
+        "price": "1 962 366 грн",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "ЖК Варшавский Плюс, р‑н Подольский, ул. Маршала Гречко, Киев": {
+        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Varshavskyi-Plius-Kyev-plan__170489-298x198x90.jpg",
+        "title": "ЖК Варшавский Плюс, р‑н Подольский, ул. Маршала Гречко, Киев",
+        "link": "https://dom.ria.comhttp://dom.ria.com/secure_redirect/?url=https%3A%2F%2Fstolitsagroup.com%2Fua%2Fnewbuild%2F264%2F266%2Fvarshavskiy-plus%2F%3Futm_source%3Ddomria%26utm_medium%3Dclick_on_banner%26utm_campaign%3Dnewbuildings_domria&hash=N8NrpIZvrpdUSblOf88Mgg&newbuildId=6261&userId=7576289&commercial=1&zoneId=42",
+        "price": "2 224 309",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "ЖК «Солнечная Ривьера», р‑н Днепровский, ул. Никольско-Слободская, 1, Киев": {
+        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Solnechnaia-Ryvera-Kyev-plan__159594-298x198x90.jpg",
+        "title": "ЖК «Солнечная Ривьера», р‑н Днепровский, ул. Никольско-Слободская, 1, Киев",
+        "link": "https://dom.ria.com/novostroyka-zhk-solnechnaia-ryvera-planirovki-4232/?sectionId=474&planId=60236&_ref=rsp",
+        "price": "3 436 560",
+        "district": "",
+        "color": "#ffa02b",
+        "source": "domik.ria"
+    },
+    "ЖК «Новомостицкий», р‑н Подольский, ул. Новомостицкая, 15, Киев": {
+        "img": "https://cdn.riastatic.com/photosnewr/dom/newbuild_photo/ZhK-Novomostytskyi-Kyev-plan__159599-298x198x90.jpg",
+        "title": "ЖК «Новомостицкий», р‑н Подольский, ул. Новомостицкая, 15, Киев",
+        "link": "https://dom.ria.com/novostroyka-zhk-novomostytskyi-planirovki-4224/?sectionId=6965&planId=60242&_ref=rsp",
+        "price": "1 467 900",
         "district": "",
         "color": "#ffa02b",
         "source": "domik.ria"
