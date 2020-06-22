@@ -4,7 +4,8 @@ const Fuse = require('fuse.js');
 const offers = [
     ...Object.values(require('./reports/olx.offers.json')),
     ...Object.values(require('./reports/domik.ria.offers.json')),
-    ...Object.values(require('./reports/100realty.ua.offers.json'))
+    ...Object.values(require('./reports/100realty.ua.offers.json')),
+    ...Object.values(require('./reports/lun.ua.offers.json'))
 ];
 const kievStreets = require('../parser/kievData/kievStreets.json');
 const kievPlaces = require('../parser/kievData/kievPlaces.json');
