@@ -9493,6 +9493,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
+puppeteer-autoscroll-down@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/puppeteer-autoscroll-down/-/puppeteer-autoscroll-down-0.1.5.tgz#53ea0d34eb906b958dd965c10438f6bc480cf63b"
+  integrity sha512-37fA1rtHgQR7m3j1aGbqX+FwBar6ybY+I+BiKO6oA5vB/jhtl1BmM5Ub8M1htoFXxNmYBIwKQ0rQ8lxIThHzCg==
+
 puppeteer-extra-plugin-adblocker@^2.11.3:
   version "2.11.3"
   resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-adblocker/-/puppeteer-extra-plugin-adblocker-2.11.3.tgz#b7605b98430845ffbf7cd6c6cd6fa7a6e702da7b"

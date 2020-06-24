@@ -29,6 +29,7 @@ const options = {
     minMatchCharLength: 3,
     keys: [
         "flat.title",
+        "flat.source",
         "flat.address.district",
         "flat.address.label"
     ]
@@ -102,32 +103,47 @@ class FlatsMap extends React.Component {
     }
 
 
-    createFlat(flat = {}, location) {
-        const flatDot = new Feature({
-            ...flat,
-            geometry: new Point(fromLonLat(location))
-        });
-
-        flatDot.setStyle(new Style({
-            image: new CircleStyle({
-                radius: 5,
-                fill: new Fill({ color: flat.isNew ? 'green' : flat.color }),
-                stroke: new Stroke({ color: 'white', width: 1 })
-            })
-        }));
-
+    createFlat = (flat = {}, location)=> {
+        const self = this;
         this.flats[flat.link] = {
-            dot: flatDot,
+            get dot() {
+                const flatDot = new Feature({
+                    ...flat,
+                    geometry: new Point(fromLonLat(location))
+                });
+
+                flatDot.setStyle(new Style({
+                    image: new CircleStyle({
+                        radius: 5,
+                        fill: new Fill({
+                            color: flat.isVisited ?
+                                '#8e8585'
+                                :
+                                flat.isNew ?
+                                    'green'
+                                    :
+                                    flat.color
+                        }),
+                        stroke: new Stroke({ color: 'white', width: 1 })
+                    })
+                }));
+
+                return flatDot;
+            } ,
             flat,
             location
         };
-    }
+    };
 
 
     createPopup() {
         this.MAP.on('click', (event)=> {
             const features = this.MAP.getFeaturesAtPixel(event.pixel);
             this.hoveredFlatsData.ids = [];
+            features.forEach(feature => {
+                this.flats[feature.values_.link].flat.isVisited = true;
+            });
+            this.onSearch({ target: { value: document.querySelector('input').value }});
             this.clickedFlats.ids = features.map(feature => feature.values_.link);
         });
 
@@ -174,6 +190,8 @@ class FlatsMap extends React.Component {
                 <a href={ flat.link }
                    target="_blank"
                    style={{ fontSize: 12 }}>{ flat.title }</a>
+                <br/>
+                <i style={{ fontSize: 11, color: 'gray' }}>{ flat.district }</i>
                 <hr/>
                 <b style={{ color: '#ff6a16', fontSize: 14 }}>{ flat.price }</b>
                 { isShowImg ?
@@ -264,10 +282,10 @@ class FlatsMap extends React.Component {
                         right: 5,
                         zIndex: 101,
                         overflow: 'auto',
-                        maxHeight: '80vh',
-                        maxWidth: '60vw',
+                        maxHeight: '90vh',
+                        maxWidth: '95vw',
                         boxShadow: '0px 0px 38px 10px rgba(143,143,143,1)',
-                        display: 'grid',
+                        display: 'gr id',
                         gridTemplateColumns: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
                         gridTemplateRows: `repeat(${Math.ceil(Math.sqrt(this.selectedFlats.length))}, 1fr)`,
                         gridColumnGap: 3,
@@ -275,7 +293,7 @@ class FlatsMap extends React.Component {
                         background: 'whitesmoke',
                         padding: 5
                     }}>
-                        { this.selectedFlats.map(flat => this.renderFlat(flat, 120)) }
+                        { this.selectedFlats.map(flat => this.renderFlat(flat, 200)) }
                     </div>
                     : null }
             </div>

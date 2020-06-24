@@ -3,3 +3,4 @@
 packages/
 config/test_config.yml
 /.idea
+/src/@PARSER/reports

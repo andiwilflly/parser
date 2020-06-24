@@ -25,6 +25,7 @@
     "ol": "^6.2.1",
     "proxysocket": "^1.2.0",
     "puppeteer": "^2.0.0",
+    "puppeteer-autoscroll-down": "^0.1.5",
     "puppeteer-extra": "^3.1.9",
     "puppeteer-extra-plugin-adblocker": "^2.11.3",
     "puppeteer-extra-plugin-anonymize-ua": "^2.2.8",
@@ -56,7 +57,7 @@
     "server": "yarn build && cd ./server && node server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "parse": "cd ./src/@PARSER && node olx.parser.js && node domik.ria.parser.js && node 100realty.ua.parser.js && node parseTitle.js && cd ../../"
+    "parse": "cd ./src/@PARSER && node r24.ua.parser.js && node lun.ua.parser.js && node olx.parser.js && node domik.ria.parser.js && node 100realty.ua.parser.js && node parseTitle.js && cd ../../"
   },
   "eslintConfig": {
     "extends": "react-app"
